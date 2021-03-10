@@ -35,8 +35,46 @@ int main(int argc, char* argv[])
 
 	Messenger::MessageTypeSupport_var mts = new Messenger::MessageTypeSupportImpl();
 	if (DDS::RETCODE_OK != mts->register_type(participant, "")) {
-	std:cerr << "Failed to register the MessageTypeSupport." << std::endl;
+	std::cerr << "Failed to register the MessageTypeSupport." << std::endl;
 		return 1;
 	}
+
+	COBRA::String_var type_name = mts->get_type_name();
+
+	DDS::Topic_var topic =
+		participant->create_topic("Movie Discussion List",
+			type_name,
+			TOPIC_QOS_DEFAULT
+			0,	// No listener required
+			OpenDDS::DCPS::DEFAULT_STATUS_MASK);
+	if (!topic) {
+		std::cerr << "Failed to create_topic." << std::endl;
+		return 1;
+	}
+
+	// Create the subscriber
+	DDS::Subscriber_var sub =
+		participant->create_subscriber(SUBSCRIBER_QOS_DEFAULT,
+									   0,	// No listener required
+									   OpenDDS::DCPS::DEFAULT_STATUS_MASK);
+	if (!sub) {
+	std:cerr << "Failed to create_subscriber." << std::endl;
+		return 1;
+	}
+
+	DDS::DataReaderListener_var listener(new DataReaderListenerImpl);
+
+	// Create the Datareader
+	DDS::DataReader var dr = sub->create_datareader(topic,
+													DATAREADER_QOS_DEFAULT,
+													listener
+													OpenDDS::DCPS::DEFAULT_STATUS_MASK);
+	if (!dr) {
+		std::cerr << "create_datareader failed." << std::endl;
+		return 1;
+	}
+
+
+
 
 }
