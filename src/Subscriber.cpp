@@ -2,7 +2,6 @@
 // Version 1.0.0
 // Description: Subsriber file to communicate with the Publisher
 
-
 #include <ace/Log_Msg.h>
 
 #include <dds/DdsDcpsInfrastructureC.h>
@@ -14,8 +13,8 @@
 
 #include <dds/DCPS/StaticIncludes.h>
 #ifdef ACE_AS_STATIC_LIBS
-#  include <dds/DCPS/RTPS/RtpsDiscovery.h>
-#  include <dds/DCPS/transport/rtps_udp/RtpsUdp.h>
+#include <dds/DCPS/RTPS/RtpsDiscovery.h>
+#include <dds/DCPS/transport/rtps_udp/RtpsUdp.h>
 #endif
 
 #include "DataReaderListenerImpl.h"
@@ -23,17 +22,14 @@
 
 int main(int argc, char *argv[])
 {
-	try {
-		DDS::DomainParticipantFactory_var dpf =
-				TheParticipantFactoryWithArgs(argc, argv);
-		DDS::DomainParticipantFactory_var participant =
-				dpf->create_participant(42, // Domain ID
-										PARTICIPANT_QOS_DEFAULT,
-										0, //No listener required
-										OpenDDS::DCPS::DEFAULT_STATUS_MASK);
-		if (!participant) {
-			std::cerr << "create_participant failed." << std::endl;
-			return 1;
-		}
+	DDS::DomainParticipantFactory_var dpf = TheParticipantFactoryWithArgs(argc, argv);
+	DDS::DomainParticipant_var participant = dpf->create_participant(42, //domain ID
+																	 PARTICIPANT_QOS_DEFAULT,
+																	 0, //No listener required
+																	 OpenDDS::DCPS::DEFAULT_STATUS_MASK);
+	if (!participant)
+	{
+		std::cerr << "create_participant failed." << std::endl;
+		return 1;
 	}
 }
