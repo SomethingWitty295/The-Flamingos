@@ -1,6 +1,6 @@
 // Author: Tavien Nelson, Cameron Banff
 // Version 1.0.0
-// Description: Subsriber file to communicate with the Publisher
+// Description: Subscriber file to communicate with the Publisher
 
 #include <ace/Log_Msg.h>
 
@@ -20,16 +20,23 @@
 #include "DataReaderListenerImpl.h"
 #include "MessengerTypeSupportImpl.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 	DDS::DomainParticipantFactory_var dpf = TheParticipantFactoryWithArgs(argc, argv);
 	DDS::DomainParticipant_var participant = dpf->create_participant(42, //domain ID
-																	 PARTICIPANT_QOS_DEFAULT,
-																	 0, //No listener required
-																	 OpenDDS::DCPS::DEFAULT_STATUS_MASK);
+		PARTICIPANT_QOS_DEFAULT,
+		0, //No listener required
+		OpenDDS::DCPS::DEFAULT_STATUS_MASK);
 	if (!participant)
 	{
 		std::cerr << "create_participant failed." << std::endl;
 		return 1;
 	}
+
+	Messenger::MessageTypeSupport_var mts = new Messenger::MessageTypeSupportImpl();
+	if (DDS::RETCODE_OK != mts->register_type(participant, "")) {
+	std:cerr << "Failed to register the MessageTypeSupport." << std::endl;
+		return 1;
+	}
+
 }
