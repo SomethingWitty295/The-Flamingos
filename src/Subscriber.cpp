@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 	// Create the Datareader
 	DDS::DataReader_var dr = sub->create_datareader(topic,
 													DATAREADER_QOS_DEFAULT,
-													listener
+													listener,
 													OpenDDS::DCPS::DEFAULT_STATUS_MASK);
 	if (!dr) {
 		std::cerr << "create_datareader failed." << std::endl;
