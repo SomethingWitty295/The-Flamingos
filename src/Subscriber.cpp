@@ -34,27 +34,6 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // REGISTERING THE DATA TYPE AND CREATING A TOPIC
-
-    Messenger::MessageTypeSupport_var mts = new Messenger::MessageTypeSupportImpl();
-    if (DDS::RETCODE_OK != mts->register_type(participant, ""))
-    {
-        std::cerr << "register_type failed." << std::endl;
-        return 1;
-    }
-
-    CORBA::String_var type_name = mts->get_type_name();
-    DDS::Topic_var topic = participant->create_topic("Movie Discussion List",
-                                                     type_name,
-                                                     TOPIC_QOS_DEFAULT,
-                                                     0, // No listener required
-                                                     OpenDDS::DCPS::DEFAULT_STATUS_MASK);
-
-    if (!topic)
-    {
-        std::cerr << "create_topic failed." << std::endl;
-        return 1;
-    }
 
 	// Create the subscriber
 	DDS::Subscriber_var sub =
@@ -66,17 +45,6 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	DDS::DataReaderListener_var listener(new DataReaderListenerImpl);
-
-	// Create the Datareader
-	DDS::DataReader_var dr = sub->create_datareader(topic,
-													DATAREADER_QOS_DEFAULT,
-													listener,
-													OpenDDS::DCPS::DEFAULT_STATUS_MASK);
-	if (!dr) {
-		std::cerr << "create_datareader failed." << std::endl;
-		return 1;
-	}
 
 
 
