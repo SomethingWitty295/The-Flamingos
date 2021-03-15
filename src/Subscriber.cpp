@@ -16,9 +16,6 @@
 #include <dds/DCPS/transport/rtps_udp/RtpsUdp.h>
 #endif
 
-#include "MessengerTypeSupportImpl.h"
-#include "DataReaderListenerImpl.h"
-
 #include <iostream>
 using namespace std;
 
