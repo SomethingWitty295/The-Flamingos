@@ -1,10 +1,16 @@
+/*
+ * Distributed under the OpenDDS License.
+ * See: http://www.opendds.org/license.html
+ */
+
 module src {
 
+  @topic
   struct Flamingo {
-    string dateAndTime;
-    string name;
+    string from;
     string subject;
-    long data;
-    long daysInCurrentMonth;
+    @key long subject_id;
+    string text;
+    long count;
   };
 };

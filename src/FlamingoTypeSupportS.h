@@ -28,12 +28,17 @@
 // TAO_IDL - Generated from
 // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:461
 
-#ifndef _TAO_IDL_FLAMINGOTYPESUPPORTS_S9VOK3_H_
-#define _TAO_IDL_FLAMINGOTYPESUPPORTS_S9VOK3_H_
+#ifndef _TAO_IDL_FLAMINGOTYPESUPPORTS_AKAFRK_H_
+#define _TAO_IDL_FLAMINGOTYPESUPPORTS_AKAFRK_H_
 
 
 #include "FlamingoTypeSupportC.h"
 #include "FlamingoS.h"
+#include "dds/DdsDcpsInfrastructureS.h"
+#include "dds/DdsDcpsPublicationS.h"
+#include "dds/DdsDcpsSubscriptionExtS.h"
+#include "dds/DdsDcpsTopicS.h"
+#include "dds/DdsDcpsTypeSupportExtS.h"
 #include "tao/PortableServer/Basic_SArguments.h"
 #include "tao/PortableServer/Special_Basic_SArguments.h"
 #include "tao/PortableServer/Fixed_Size_SArgument_T.h"
@@ -58,6 +63,18 @@ namespace TAO
 TAO_END_VERSIONED_NAMESPACE_DECL
 
 
+
+// TAO_IDL - Generated from
+// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_module\module_sh.cpp:38
+
+namespace POA_src
+{
+  
+
+// TAO_IDL - Generated from
+// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_module\module_sh.cpp:69
+
+} // module src
 
 #endif /* ifndef */
 

@@ -35,11 +35,9 @@ int main(int argc, char *argv[])
     }
 
     // REGISTERING THE DATA TYPE AND CREATING A TOPIC
-
     // Trying to get my IDE to recognize the type support object type.
-
+    src::FlamingoTypeSupport_var mts = new src::FlamingoTypeSupportImpl(); // it works!!!!!!!
     //Messenger::MessageTypeSupport_var mts = new Messenger::MessageTypeSupportImpl();
-
     if (DDS::RETCODE_OK != mts->register_type(participant, ""))
     {
         std::cerr << "register_type failed." << std::endl;
@@ -47,7 +45,7 @@ int main(int argc, char *argv[])
     }
 
     CORBA::String_var type_name = mts->get_type_name();
-    DDS::Topic_var topic = participant->create_topic("Movie Discussion List",
+    DDS::Topic_var topic = participant->create_topic("Flamingo List",
                                                      type_name,
                                                      TOPIC_QOS_DEFAULT,
                                                      0, // No listener required
@@ -84,7 +82,8 @@ int main(int argc, char *argv[])
         std::cerr << "create_datawriter failed." << std::endl;
     }
 
-    Messenger::MessageDataWriter_var message_writer = Messenger::MessageDataWriter::_narrow(writer);
+    //Messenger::MessageDataWriter_var message_writer = Messenger::MessageDataWriter::_narrow(writer);
+    src::FlamingoDataWriter_var flamingo_writer = src::FlamingoDataWriter::_narrow(writer);
 
     //Block until Subscriber is available
     DDS::StatusCondition_var condition = writer->get_statuscondition();
@@ -123,17 +122,19 @@ int main(int argc, char *argv[])
     // SAMPLE PUBLICATION
 
     // Write samples
-    Messenger::Message message;
-    message.subject_id = 99;
-    message.from = "Comic Book Guy";
-    message.subject = "Review";
-    message.text = "Worst. Movie. Ever.";
-    message.count = 0;
+
+    src::Flamingo flamingo;
+    flamingo.subject_id = 99;
+    flamingo.from = "A Flamingo";
+    flamingo.subject = "OpenDDS";
+    flamingo.text = "DDS must accept us flamingos now.";
+    flamingo.count = 0;
+
     for (int i = 0; i < 10; i++)
     {
-        DDS::ReturnCode_t error = message_writer->write(message, DDS::HANDLE_NIL);
-        message.count++;
-        message.subject_id++;
+        DDS::ReturnCode_t error = flamingo_writer->write(flamingo, DDS::HANDLE_NIL);
+        flamingo.count++;
+        flamingo.subject_id++;
         if (error != DDS::RETCODE_OK)
         {
             // Log or otherwise handle the error condition
