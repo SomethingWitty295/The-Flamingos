@@ -28,8 +28,8 @@
 // TAO_IDL - Generated from
 // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:152
 
-#ifndef _TAO_IDL_FLAMINGOC_9WXBRO_H_
-#define _TAO_IDL_FLAMINGOC_9WXBRO_H_
+#ifndef _TAO_IDL_FLAMINGOC_DHOYPI_H_
+#define _TAO_IDL_FLAMINGOC_DHOYPI_H_
 
 
 #include /**/ "ace/config-all.h"
@@ -102,11 +102,11 @@ namespace src
 
     static void _tao_any_destructor (void *);
     
-    ::TAO::String_Manager from;
+    ::TAO::String_Manager dateAndTime;
+    ::TAO::String_Manager name;
     ::TAO::String_Manager subject;
-    ::CORBA::Long subject_id;
-    ::TAO::String_Manager text;
-    ::CORBA::Long count;
+    ::CORBA::Long data;
+    ::CORBA::Long daysInCurrentMonth;
   };
 
   // TAO_IDL - Generated from

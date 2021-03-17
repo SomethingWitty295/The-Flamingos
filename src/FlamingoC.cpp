@@ -52,11 +52,11 @@ static TAO::TypeCode::Struct_Field<
   ::CORBA::TypeCode_ptr const *> const 
     _tao_fields_src_Flamingo[] =
       {
-        { "from", &CORBA::_tc_string },
+        { "dateAndTime", &CORBA::_tc_string },
+        { "name", &CORBA::_tc_string },
         { "subject", &CORBA::_tc_string },
-        { "subject_id", &CORBA::_tc_long },
-        { "text", &CORBA::_tc_string },
-        { "count", &CORBA::_tc_long }
+        { "data", &CORBA::_tc_long },
+        { "daysInCurrentMonth", &CORBA::_tc_long }
       };
   
 static TAO::TypeCode::Struct<
@@ -216,11 +216,11 @@ TAO_BEGIN_VERSIONED_NAMESPACE_DECL
     const src::Flamingo &_tao_aggregate)
 {
   return
-    (strm << _tao_aggregate.from.in ()) &&
+    (strm << _tao_aggregate.dateAndTime.in ()) &&
+    (strm << _tao_aggregate.name.in ()) &&
     (strm << _tao_aggregate.subject.in ()) &&
-    (strm << _tao_aggregate.subject_id) &&
-    (strm << _tao_aggregate.text.in ()) &&
-    (strm << _tao_aggregate.count);
+    (strm << _tao_aggregate.data) &&
+    (strm << _tao_aggregate.daysInCurrentMonth);
 }
 
 ::CORBA::Boolean operator>> (
@@ -228,11 +228,11 @@ TAO_BEGIN_VERSIONED_NAMESPACE_DECL
     src::Flamingo &_tao_aggregate)
 {
   return
-    (strm >> _tao_aggregate.from.out ()) &&
+    (strm >> _tao_aggregate.dateAndTime.out ()) &&
+    (strm >> _tao_aggregate.name.out ()) &&
     (strm >> _tao_aggregate.subject.out ()) &&
-    (strm >> _tao_aggregate.subject_id) &&
-    (strm >> _tao_aggregate.text.out ()) &&
-    (strm >> _tao_aggregate.count);
+    (strm >> _tao_aggregate.data) &&
+    (strm >> _tao_aggregate.daysInCurrentMonth);
 }
 
 TAO_END_VERSIONED_NAMESPACE_DECL

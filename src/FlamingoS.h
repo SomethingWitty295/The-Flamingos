@@ -28,8 +28,8 @@
 // TAO_IDL - Generated from
 // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:461
 
-#ifndef _TAO_IDL_FLAMINGOS_9TI93A_H_
-#define _TAO_IDL_FLAMINGOS_9TI93A_H_
+#ifndef _TAO_IDL_FLAMINGOS_W3L6AY_H_
+#define _TAO_IDL_FLAMINGOS_W3L6AY_H_
 
 
 #include "FlamingoC.h"

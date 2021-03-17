@@ -13,7 +13,7 @@
 #include <dds/DCPS/transport/rtps_udp/RtpsUdp.h>
 #endif
 
-#include <The-Flamingos\src\FlamingoTypeSupportImpl.h>
+#include <The-Flamingos/src/FlamingoTypeSupportImpl.h>
 
 //#include "MessengerTypeSupportImpl.h"
 
@@ -124,17 +124,16 @@ int main(int argc, char *argv[])
     // Write samples
 
     src::Flamingo flamingo;
-    flamingo.subject_id = 99;
-    flamingo.from = "A Flamingo";
-    flamingo.subject = "OpenDDS";
-    flamingo.text = "DDS must accept us flamingos now.";
-    flamingo.count = 0;
+    flamingo.dateAndTime = "now";
+    flamingo.name = "Mo";
+    flamingo.subject = "Flamingo";
+    flamingo.data = 0;
+    flamingo.daysInCurrentMonth = 0;
 
     for (int i = 0; i < 10; i++)
     {
         DDS::ReturnCode_t error = flamingo_writer->write(flamingo, DDS::HANDLE_NIL);
-        flamingo.count++;
-        flamingo.subject_id++;
+        flamingo.data++;
         if (error != DDS::RETCODE_OK)
         {
             // Log or otherwise handle the error condition

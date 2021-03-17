@@ -28,8 +28,8 @@
 // TAO_IDL - Generated from
 // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:152
 
-#ifndef _TAO_IDL_FLAMINGOTYPESUPPORTC_VMUOQW_H_
-#define _TAO_IDL_FLAMINGOTYPESUPPORTC_VMUOQW_H_
+#ifndef _TAO_IDL_FLAMINGOTYPESUPPORTC_UEJTGS_H_
+#define _TAO_IDL_FLAMINGOTYPESUPPORTC_UEJTGS_H_
 
 
 #include /**/ "ace/config-all.h"

@@ -3,14 +3,15 @@
  * See: http://www.opendds.org/license.html
  */
 
-module src {
+module src
+{
 
-  @topic
-  struct Flamingo {
-    string from;
+  @topic struct Flamingo
+  {
+    string dateAndTime;
+    string name;
     string subject;
-    @key long subject_id;
-    string text;
-    long count;
+    long data;
+    long daysInCurrentMonth;
   };
 };
