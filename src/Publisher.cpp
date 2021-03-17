@@ -13,7 +13,11 @@
 #include <dds/DCPS/transport/rtps_udp/RtpsUdp.h>
 #endif
 
-#include "MessengerTypeSupportImpl.h"
+#include <The-Flamingos\src\FlamingoTypeSupportImpl.h>
+
+//#include "MessengerTypeSupportImpl.h"
+
+//#include "MessageTypeSupportImpl.h"
 
 int main(int argc, char *argv[])
 {
@@ -32,7 +36,10 @@ int main(int argc, char *argv[])
 
     // REGISTERING THE DATA TYPE AND CREATING A TOPIC
 
-    Messenger::MessageTypeSupport_var mts = new Messenger::MessageTypeSupportImpl();
+    // Trying to get my IDE to recognize the type support object type.
+
+    //Messenger::MessageTypeSupport_var mts = new Messenger::MessageTypeSupportImpl();
+
     if (DDS::RETCODE_OK != mts->register_type(participant, ""))
     {
         std::cerr << "register_type failed." << std::endl;

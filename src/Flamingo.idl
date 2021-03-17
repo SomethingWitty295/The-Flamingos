@@ -1,0 +1,10 @@
+module src {
+
+  struct Flamingo {
+    string dateAndTime;
+    string name;
+    string subject;
+    long data;
+    long daysInCurrentMonth;
+  };
+};
