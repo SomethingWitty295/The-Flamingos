@@ -26,20 +26,11 @@
  **/
 
 // TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:376
+// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:376
 
 
 #include "FlamingoTypeSupportC.h"
-#include "tao/AnyTypeCode/Null_RefCount_Policy.h"
-#include "tao/AnyTypeCode/TypeCode_Constants.h"
-#include "tao/AnyTypeCode/Alias_TypeCode_Static.h"
-#include "tao/AnyTypeCode/Objref_TypeCode_Static.h"
-#include "tao/AnyTypeCode/Sequence_TypeCode_Static.h"
 #include "tao/CDR.h"
-#include "tao/CDR.h"
-#include "tao/AnyTypeCode/Any.h"
-#include "tao/AnyTypeCode/Any_Impl_T.h"
-#include "tao/AnyTypeCode/Any_Dual_Impl_T.h"
 #include "ace/OS_NS_string.h"
 
 #if !defined (__ACE_INLINE__)
@@ -47,60 +38,7 @@
 #endif /* !defined INLINE */
 
 // TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_typecode\alias_typecode.cpp:51
-
-
-
-// TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_typecode\typecode_defn.cpp:464
-
-
-#ifndef _TAO_TYPECODE_src_FlamingoSeq_GUARD
-#define _TAO_TYPECODE_src_FlamingoSeq_GUARD
-
-TAO_BEGIN_VERSIONED_NAMESPACE_DECL
-
-namespace TAO
-{
-  namespace TypeCode
-  {
-    namespace
-    {
-      TAO::TypeCode::Sequence< ::CORBA::TypeCode_ptr const *,
-                              TAO::Null_RefCount_Policy>
-        src_FlamingoSeq_0 (
-          ::CORBA::tk_sequence,
-          &src::_tc_Flamingo,
-          0U);
-        
-      ::CORBA::TypeCode_ptr const tc_src_FlamingoSeq_0 =
-        &src_FlamingoSeq_0;
-    }
-  }
-}
-
-TAO_END_VERSIONED_NAMESPACE_DECL
-
-#endif /* _TAO_TYPECODE_src_FlamingoSeq_GUARD */
-
-static TAO::TypeCode::Alias<char const *,
-                            ::CORBA::TypeCode_ptr const *,
-                            TAO::Null_RefCount_Policy>
-  _tao_tc_src_FlamingoSeq (
-    ::CORBA::tk_alias,
-    "IDL:src/FlamingoSeq:1.0",
-    "FlamingoSeq",
-    &TAO::TypeCode::tc_src_FlamingoSeq_0);
-  
-
-namespace src
-{
-  ::CORBA::TypeCode_ptr const _tc_FlamingoSeq =
-    &_tao_tc_src_FlamingoSeq;
-}
-
-// TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_cs.cpp:51
+// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_cs.cpp:51
 
 // Traits specializations for src::FlamingoTypeSupport.
 
@@ -137,14 +75,6 @@ src::FlamingoTypeSupport::FlamingoTypeSupport (void)
 
 src::FlamingoTypeSupport::~FlamingoTypeSupport (void)
 {
-}
-
-void
-src::FlamingoTypeSupport::_tao_any_destructor (void *_tao_void_pointer)
-{
-  FlamingoTypeSupport *_tao_tmp_pointer =
-    static_cast<FlamingoTypeSupport *> (_tao_void_pointer);
-  ::CORBA::release (_tao_tmp_pointer);
 }
 
 src::FlamingoTypeSupport_ptr
@@ -233,24 +163,7 @@ src::FlamingoTypeSupport::marshal (TAO_OutputCDR & /* cdr */)
 }
 
 // TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_typecode\objref_typecode.cpp:72
-
-static TAO::TypeCode::Objref<char const *,
-                             TAO::Null_RefCount_Policy>
-  _tao_tc_src_FlamingoTypeSupport (
-    ::CORBA::tk_local_interface,
-    "IDL:src/FlamingoTypeSupport:1.0",
-    "FlamingoTypeSupport");
-  
-
-namespace src
-{
-  ::CORBA::TypeCode_ptr const _tc_FlamingoTypeSupport =
-    &_tao_tc_src_FlamingoTypeSupport;
-}
-
-// TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_cs.cpp:51
+// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_cs.cpp:51
 
 // Traits specializations for src::FlamingoDataWriter.
 
@@ -287,14 +200,6 @@ src::FlamingoDataWriter::FlamingoDataWriter (void)
 
 src::FlamingoDataWriter::~FlamingoDataWriter (void)
 {
-}
-
-void
-src::FlamingoDataWriter::_tao_any_destructor (void *_tao_void_pointer)
-{
-  FlamingoDataWriter *_tao_tmp_pointer =
-    static_cast<FlamingoDataWriter *> (_tao_void_pointer);
-  ::CORBA::release (_tao_tmp_pointer);
 }
 
 src::FlamingoDataWriter_ptr
@@ -383,24 +288,7 @@ src::FlamingoDataWriter::marshal (TAO_OutputCDR & /* cdr */)
 }
 
 // TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_typecode\objref_typecode.cpp:72
-
-static TAO::TypeCode::Objref<char const *,
-                             TAO::Null_RefCount_Policy>
-  _tao_tc_src_FlamingoDataWriter (
-    ::CORBA::tk_local_interface,
-    "IDL:src/FlamingoDataWriter:1.0",
-    "FlamingoDataWriter");
-  
-
-namespace src
-{
-  ::CORBA::TypeCode_ptr const _tc_FlamingoDataWriter =
-    &_tao_tc_src_FlamingoDataWriter;
-}
-
-// TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_cs.cpp:51
+// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_cs.cpp:51
 
 // Traits specializations for src::FlamingoDataReader.
 
@@ -437,14 +325,6 @@ src::FlamingoDataReader::FlamingoDataReader (void)
 
 src::FlamingoDataReader::~FlamingoDataReader (void)
 {
-}
-
-void
-src::FlamingoDataReader::_tao_any_destructor (void *_tao_void_pointer)
-{
-  FlamingoDataReader *_tao_tmp_pointer =
-    static_cast<FlamingoDataReader *> (_tao_void_pointer);
-  ::CORBA::release (_tao_tmp_pointer);
 }
 
 src::FlamingoDataReader_ptr
@@ -535,414 +415,4 @@ src::FlamingoDataReader::marshal (TAO_OutputCDR & /* cdr */)
 {
   return false;
 }
-
-// TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_typecode\objref_typecode.cpp:72
-
-static TAO::TypeCode::Objref<char const *,
-                             TAO::Null_RefCount_Policy>
-  _tao_tc_src_FlamingoDataReader (
-    ::CORBA::tk_local_interface,
-    "IDL:src/FlamingoDataReader:1.0",
-    "FlamingoDataReader");
-  
-
-namespace src
-{
-  ::CORBA::TypeCode_ptr const _tc_FlamingoDataReader =
-    &_tao_tc_src_FlamingoDataReader;
-}
-
-// TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\any_op_cs.cpp:41
-TAO_BEGIN_VERSIONED_NAMESPACE_DECL
-
-
-
-namespace TAO
-{
-  template<>
-  ::CORBA::Boolean
-  Any_Impl_T<src::FlamingoTypeSupport>::to_object (
-      ::CORBA::Object_ptr &_tao_elem) const
-  {
-    _tao_elem = ::CORBA::Object::_duplicate (this->value_);
-    return true;
-  }
-}
-
-namespace TAO
-{
-  template<>
-  ::CORBA::Boolean
-  Any_Impl_T<src::FlamingoTypeSupport>::marshal_value (TAO_OutputCDR &)
-  {
-    return false;
-  }
-
-  template<>
-  ::CORBA::Boolean
-  Any_Impl_T<src::FlamingoTypeSupport>::demarshal_value (TAO_InputCDR &)
-  {
-    return false;
-  }
-}
-TAO_END_VERSIONED_NAMESPACE_DECL
-
-
-
-#if defined (ACE_ANY_OPS_USE_NAMESPACE)
-
-namespace src
-{
-  
-
-  /// Copying insertion.
-  void
-  operator<<= (
-      ::CORBA::Any &_tao_any,
-      FlamingoTypeSupport_ptr _tao_elem)
-  {
-    FlamingoTypeSupport_ptr _tao_objptr =
-      FlamingoTypeSupport::_duplicate (_tao_elem);
-    _tao_any <<= &_tao_objptr;
-  }
-
-  /// Non-copying insertion.
-  void
-  operator<<= (
-      ::CORBA::Any &_tao_any,
-      FlamingoTypeSupport_ptr *_tao_elem)
-  {
-    TAO::Any_Impl_T<FlamingoTypeSupport>::insert (
-        _tao_any,
-        FlamingoTypeSupport::_tao_any_destructor,
-        _tc_FlamingoTypeSupport,
-        *_tao_elem);
-  }
-
-  ::CORBA::Boolean
-  operator>>= (
-      const ::CORBA::Any &_tao_any,
-      FlamingoTypeSupport_ptr &_tao_elem)
-  {
-    return
-      TAO::Any_Impl_T<FlamingoTypeSupport>::extract (
-          _tao_any,
-          FlamingoTypeSupport::_tao_any_destructor,
-          _tc_FlamingoTypeSupport,
-          _tao_elem);
-  }
-}
-
-#else
-
-TAO_BEGIN_VERSIONED_NAMESPACE_DECL
-
-
-
-/// Copying insertion.
-void
-operator<<= (
-    ::CORBA::Any &_tao_any,
-    src::FlamingoTypeSupport_ptr _tao_elem)
-{
-  src::FlamingoTypeSupport_ptr _tao_objptr =
-    src::FlamingoTypeSupport::_duplicate (_tao_elem);
-  _tao_any <<= &_tao_objptr;
-}
-
-/// Non-copying insertion.
-void
-operator<<= (
-    ::CORBA::Any &_tao_any,
-    src::FlamingoTypeSupport_ptr *_tao_elem)
-{
-  TAO::Any_Impl_T<src::FlamingoTypeSupport>::insert (
-      _tao_any,
-      src::FlamingoTypeSupport::_tao_any_destructor,
-      src::_tc_FlamingoTypeSupport,
-      *_tao_elem);
-}
-
-::CORBA::Boolean
-operator>>= (
-    const ::CORBA::Any &_tao_any,
-    src::FlamingoTypeSupport_ptr &_tao_elem)
-{
-  return
-    TAO::Any_Impl_T<src::FlamingoTypeSupport>::extract (
-        _tao_any,
-        src::FlamingoTypeSupport::_tao_any_destructor,
-        src::_tc_FlamingoTypeSupport,
-        _tao_elem);
-}
-
-TAO_END_VERSIONED_NAMESPACE_DECL
-
-
-
-#endif
-
-// TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\any_op_cs.cpp:41
-TAO_BEGIN_VERSIONED_NAMESPACE_DECL
-
-
-
-namespace TAO
-{
-  template<>
-  ::CORBA::Boolean
-  Any_Impl_T<src::FlamingoDataWriter>::to_object (
-      ::CORBA::Object_ptr &_tao_elem) const
-  {
-    _tao_elem = ::CORBA::Object::_duplicate (this->value_);
-    return true;
-  }
-}
-
-namespace TAO
-{
-  template<>
-  ::CORBA::Boolean
-  Any_Impl_T<src::FlamingoDataWriter>::marshal_value (TAO_OutputCDR &)
-  {
-    return false;
-  }
-
-  template<>
-  ::CORBA::Boolean
-  Any_Impl_T<src::FlamingoDataWriter>::demarshal_value (TAO_InputCDR &)
-  {
-    return false;
-  }
-}
-TAO_END_VERSIONED_NAMESPACE_DECL
-
-
-
-#if defined (ACE_ANY_OPS_USE_NAMESPACE)
-
-namespace src
-{
-  
-
-  /// Copying insertion.
-  void
-  operator<<= (
-      ::CORBA::Any &_tao_any,
-      FlamingoDataWriter_ptr _tao_elem)
-  {
-    FlamingoDataWriter_ptr _tao_objptr =
-      FlamingoDataWriter::_duplicate (_tao_elem);
-    _tao_any <<= &_tao_objptr;
-  }
-
-  /// Non-copying insertion.
-  void
-  operator<<= (
-      ::CORBA::Any &_tao_any,
-      FlamingoDataWriter_ptr *_tao_elem)
-  {
-    TAO::Any_Impl_T<FlamingoDataWriter>::insert (
-        _tao_any,
-        FlamingoDataWriter::_tao_any_destructor,
-        _tc_FlamingoDataWriter,
-        *_tao_elem);
-  }
-
-  ::CORBA::Boolean
-  operator>>= (
-      const ::CORBA::Any &_tao_any,
-      FlamingoDataWriter_ptr &_tao_elem)
-  {
-    return
-      TAO::Any_Impl_T<FlamingoDataWriter>::extract (
-          _tao_any,
-          FlamingoDataWriter::_tao_any_destructor,
-          _tc_FlamingoDataWriter,
-          _tao_elem);
-  }
-}
-
-#else
-
-TAO_BEGIN_VERSIONED_NAMESPACE_DECL
-
-
-
-/// Copying insertion.
-void
-operator<<= (
-    ::CORBA::Any &_tao_any,
-    src::FlamingoDataWriter_ptr _tao_elem)
-{
-  src::FlamingoDataWriter_ptr _tao_objptr =
-    src::FlamingoDataWriter::_duplicate (_tao_elem);
-  _tao_any <<= &_tao_objptr;
-}
-
-/// Non-copying insertion.
-void
-operator<<= (
-    ::CORBA::Any &_tao_any,
-    src::FlamingoDataWriter_ptr *_tao_elem)
-{
-  TAO::Any_Impl_T<src::FlamingoDataWriter>::insert (
-      _tao_any,
-      src::FlamingoDataWriter::_tao_any_destructor,
-      src::_tc_FlamingoDataWriter,
-      *_tao_elem);
-}
-
-::CORBA::Boolean
-operator>>= (
-    const ::CORBA::Any &_tao_any,
-    src::FlamingoDataWriter_ptr &_tao_elem)
-{
-  return
-    TAO::Any_Impl_T<src::FlamingoDataWriter>::extract (
-        _tao_any,
-        src::FlamingoDataWriter::_tao_any_destructor,
-        src::_tc_FlamingoDataWriter,
-        _tao_elem);
-}
-
-TAO_END_VERSIONED_NAMESPACE_DECL
-
-
-
-#endif
-
-// TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\any_op_cs.cpp:41
-TAO_BEGIN_VERSIONED_NAMESPACE_DECL
-
-
-
-namespace TAO
-{
-  template<>
-  ::CORBA::Boolean
-  Any_Impl_T<src::FlamingoDataReader>::to_object (
-      ::CORBA::Object_ptr &_tao_elem) const
-  {
-    _tao_elem = ::CORBA::Object::_duplicate (this->value_);
-    return true;
-  }
-}
-
-namespace TAO
-{
-  template<>
-  ::CORBA::Boolean
-  Any_Impl_T<src::FlamingoDataReader>::marshal_value (TAO_OutputCDR &)
-  {
-    return false;
-  }
-
-  template<>
-  ::CORBA::Boolean
-  Any_Impl_T<src::FlamingoDataReader>::demarshal_value (TAO_InputCDR &)
-  {
-    return false;
-  }
-}
-TAO_END_VERSIONED_NAMESPACE_DECL
-
-
-
-#if defined (ACE_ANY_OPS_USE_NAMESPACE)
-
-namespace src
-{
-  
-
-  /// Copying insertion.
-  void
-  operator<<= (
-      ::CORBA::Any &_tao_any,
-      FlamingoDataReader_ptr _tao_elem)
-  {
-    FlamingoDataReader_ptr _tao_objptr =
-      FlamingoDataReader::_duplicate (_tao_elem);
-    _tao_any <<= &_tao_objptr;
-  }
-
-  /// Non-copying insertion.
-  void
-  operator<<= (
-      ::CORBA::Any &_tao_any,
-      FlamingoDataReader_ptr *_tao_elem)
-  {
-    TAO::Any_Impl_T<FlamingoDataReader>::insert (
-        _tao_any,
-        FlamingoDataReader::_tao_any_destructor,
-        _tc_FlamingoDataReader,
-        *_tao_elem);
-  }
-
-  ::CORBA::Boolean
-  operator>>= (
-      const ::CORBA::Any &_tao_any,
-      FlamingoDataReader_ptr &_tao_elem)
-  {
-    return
-      TAO::Any_Impl_T<FlamingoDataReader>::extract (
-          _tao_any,
-          FlamingoDataReader::_tao_any_destructor,
-          _tc_FlamingoDataReader,
-          _tao_elem);
-  }
-}
-
-#else
-
-TAO_BEGIN_VERSIONED_NAMESPACE_DECL
-
-
-
-/// Copying insertion.
-void
-operator<<= (
-    ::CORBA::Any &_tao_any,
-    src::FlamingoDataReader_ptr _tao_elem)
-{
-  src::FlamingoDataReader_ptr _tao_objptr =
-    src::FlamingoDataReader::_duplicate (_tao_elem);
-  _tao_any <<= &_tao_objptr;
-}
-
-/// Non-copying insertion.
-void
-operator<<= (
-    ::CORBA::Any &_tao_any,
-    src::FlamingoDataReader_ptr *_tao_elem)
-{
-  TAO::Any_Impl_T<src::FlamingoDataReader>::insert (
-      _tao_any,
-      src::FlamingoDataReader::_tao_any_destructor,
-      src::_tc_FlamingoDataReader,
-      *_tao_elem);
-}
-
-::CORBA::Boolean
-operator>>= (
-    const ::CORBA::Any &_tao_any,
-    src::FlamingoDataReader_ptr &_tao_elem)
-{
-  return
-    TAO::Any_Impl_T<src::FlamingoDataReader>::extract (
-        _tao_any,
-        src::FlamingoDataReader::_tao_any_destructor,
-        src::_tc_FlamingoDataReader,
-        _tao_elem);
-}
-
-TAO_END_VERSIONED_NAMESPACE_DECL
-
-
-
-#endif
 

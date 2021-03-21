@@ -26,10 +26,12 @@
  **/
 
 // TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:152
+// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:152
 
-#ifndef _TAO_IDL_FLAMINGOTYPESUPPORTC_UEJTGS_H_
-#define _TAO_IDL_FLAMINGOTYPESUPPORTC_UEJTGS_H_
+#ifndef _TAO_IDL_FLAMINGOTYPESUPPORTC_U2FJ9D_H_
+#define _TAO_IDL_FLAMINGOTYPESUPPORTC_U2FJ9D_H_
+
+#include /**/ "ace/pre.h"
 
 
 #include /**/ "ace/config-all.h"
@@ -39,8 +41,6 @@
 #endif /* ACE_LACKS_PRAGMA_ONCE */
 
 
-#include "tao/AnyTypeCode/AnyTypeCode_methods.h"
-#include "tao/AnyTypeCode/Any.h"
 #include "tao/ORB.h"
 #include "tao/SystemException.h"
 #include "tao/Basic_Types.h"
@@ -79,24 +79,19 @@
 #define TAO_EXPORT_MACRO 
 
 // TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_module\module_ch.cpp:38
+// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_module\module_ch.cpp:38
 
 namespace src
 {
 
   // TAO_IDL - Generated from
-  // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_sequence\sequence_ch.cpp:102
+  // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_sequence\sequence_ch.cpp:102
 
   typedef ::TAO::DCPS::ZeroCopyDataSeq< src::Flamingo, DCPS_ZERO_COPY_SEQ_DEFAULT_SIZE> FlamingoSeq;
   
 
   // TAO_IDL - Generated from
-  // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_typecode\typecode_decl.cpp:37
-
-  extern  ::CORBA::TypeCode_ptr const _tc_FlamingoSeq;
-
-  // TAO_IDL - Generated from
-  // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_interface.cpp:751
+  // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_interface.cpp:751
 
 #if !defined (_SRC_FLAMINGOTYPESUPPORT__VAR_OUT_CH_)
 #define _SRC_FLAMINGOTYPESUPPORT__VAR_OUT_CH_
@@ -119,7 +114,7 @@ namespace src
 #endif /* end #if !defined */
 
   // TAO_IDL - Generated from
-  // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_ch.cpp:43
+  // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_ch.cpp:43
 
   class  FlamingoTypeSupport
     : public virtual ::OpenDDS::DCPS::TypeSupport
@@ -128,13 +123,11 @@ namespace src
   public:
 
     // TAO_IDL - Generated from
-    // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_type.cpp:307
+    // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_type.cpp:307
 
     typedef FlamingoTypeSupport_ptr _ptr_type;
     typedef FlamingoTypeSupport_var _var_type;
     typedef FlamingoTypeSupport_out _out_type;
-
-    static void _tao_any_destructor (void *);
 
     // The static operations.
     static FlamingoTypeSupport_ptr _duplicate (FlamingoTypeSupport_ptr obj);
@@ -146,7 +139,7 @@ namespace src
     static FlamingoTypeSupport_ptr _nil (void);
 
     // TAO_IDL - Generated from
-    // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_ch.cpp:140
+    // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_ch.cpp:140
 
     virtual ::CORBA::Boolean _is_a (const char *type_id);
     virtual const char* _interface_repository_id (void) const;
@@ -173,12 +166,7 @@ namespace src
   };
 
   // TAO_IDL - Generated from
-  // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_typecode\typecode_decl.cpp:37
-
-  extern  ::CORBA::TypeCode_ptr const _tc_FlamingoTypeSupport;
-
-  // TAO_IDL - Generated from
-  // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_interface.cpp:751
+  // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_interface.cpp:751
 
 #if !defined (_SRC_FLAMINGODATAWRITER__VAR_OUT_CH_)
 #define _SRC_FLAMINGODATAWRITER__VAR_OUT_CH_
@@ -201,7 +189,7 @@ namespace src
 #endif /* end #if !defined */
 
   // TAO_IDL - Generated from
-  // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_ch.cpp:43
+  // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_ch.cpp:43
 
   class  FlamingoDataWriter
     : public virtual ::DDS::DataWriter
@@ -210,13 +198,11 @@ namespace src
   public:
 
     // TAO_IDL - Generated from
-    // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_type.cpp:307
+    // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_type.cpp:307
 
     typedef FlamingoDataWriter_ptr _ptr_type;
     typedef FlamingoDataWriter_var _var_type;
     typedef FlamingoDataWriter_out _out_type;
-
-    static void _tao_any_destructor (void *);
 
     // The static operations.
     static FlamingoDataWriter_ptr _duplicate (FlamingoDataWriter_ptr obj);
@@ -269,7 +255,7 @@ namespace src
       const ::src::Flamingo & instance_data) = 0;
 
     // TAO_IDL - Generated from
-    // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_ch.cpp:140
+    // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_ch.cpp:140
 
     virtual ::CORBA::Boolean _is_a (const char *type_id);
     virtual const char* _interface_repository_id (void) const;
@@ -296,12 +282,7 @@ namespace src
   };
 
   // TAO_IDL - Generated from
-  // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_typecode\typecode_decl.cpp:37
-
-  extern  ::CORBA::TypeCode_ptr const _tc_FlamingoDataWriter;
-
-  // TAO_IDL - Generated from
-  // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_interface.cpp:751
+  // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_interface.cpp:751
 
 #if !defined (_SRC_FLAMINGODATAREADER__VAR_OUT_CH_)
 #define _SRC_FLAMINGODATAREADER__VAR_OUT_CH_
@@ -324,7 +305,7 @@ namespace src
 #endif /* end #if !defined */
 
   // TAO_IDL - Generated from
-  // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_ch.cpp:43
+  // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_ch.cpp:43
 
   class  FlamingoDataReader
     : public virtual ::OpenDDS::DCPS::DataReaderEx
@@ -333,13 +314,11 @@ namespace src
   public:
 
     // TAO_IDL - Generated from
-    // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_type.cpp:307
+    // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_type.cpp:307
 
     typedef FlamingoDataReader_ptr _ptr_type;
     typedef FlamingoDataReader_var _var_type;
     typedef FlamingoDataReader_out _out_type;
-
-    static void _tao_any_destructor (void *);
 
     // The static operations.
     static FlamingoDataReader_ptr _duplicate (FlamingoDataReader_ptr obj);
@@ -462,7 +441,7 @@ namespace src
       const ::src::Flamingo & instance_data) = 0;
 
     // TAO_IDL - Generated from
-    // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_ch.cpp:140
+    // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_ch.cpp:140
 
     virtual ::CORBA::Boolean _is_a (const char *type_id);
     virtual const char* _interface_repository_id (void) const;
@@ -488,18 +467,13 @@ namespace src
 #endif /* ACE_HAS_CPP11 */
   };
 
-  // TAO_IDL - Generated from
-  // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_typecode\typecode_decl.cpp:37
-
-  extern  ::CORBA::TypeCode_ptr const _tc_FlamingoDataReader;
-
 // TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_module\module_ch.cpp:67
+// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_module\module_ch.cpp:67
 
 } // module src
 
 // TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_arg_traits.cpp:68
+// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_arg_traits.cpp:68
 
 TAO_BEGIN_VERSIONED_NAMESPACE_DECL
 
@@ -514,7 +488,7 @@ TAO_END_VERSIONED_NAMESPACE_DECL
 
 
 // TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_traits.cpp:62
+// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_traits.cpp:62
 
 TAO_BEGIN_VERSIONED_NAMESPACE_DECL
 
@@ -581,94 +555,12 @@ TAO_END_VERSIONED_NAMESPACE_DECL
 
 
 // TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\any_op_ch.cpp:44
-
-
-
-#if defined (ACE_ANY_OPS_USE_NAMESPACE)
-
-namespace src
-{
-   void operator<<= ( ::CORBA::Any &, FlamingoTypeSupport_ptr); // copying
-   void operator<<= ( ::CORBA::Any &, FlamingoTypeSupport_ptr *); // non-copying
-   ::CORBA::Boolean operator>>= (const ::CORBA::Any &, FlamingoTypeSupport_ptr &);
-}
-
-#else
-
-
-TAO_BEGIN_VERSIONED_NAMESPACE_DECL
-
- void operator<<= (::CORBA::Any &, src::FlamingoTypeSupport_ptr); // copying
- void operator<<= (::CORBA::Any &, src::FlamingoTypeSupport_ptr *); // non-copying
- ::CORBA::Boolean operator>>= (const ::CORBA::Any &, src::FlamingoTypeSupport_ptr &);
-TAO_END_VERSIONED_NAMESPACE_DECL
-
-
-
-#endif
-
-// TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\any_op_ch.cpp:44
-
-
-
-#if defined (ACE_ANY_OPS_USE_NAMESPACE)
-
-namespace src
-{
-   void operator<<= ( ::CORBA::Any &, FlamingoDataWriter_ptr); // copying
-   void operator<<= ( ::CORBA::Any &, FlamingoDataWriter_ptr *); // non-copying
-   ::CORBA::Boolean operator>>= (const ::CORBA::Any &, FlamingoDataWriter_ptr &);
-}
-
-#else
-
-
-TAO_BEGIN_VERSIONED_NAMESPACE_DECL
-
- void operator<<= (::CORBA::Any &, src::FlamingoDataWriter_ptr); // copying
- void operator<<= (::CORBA::Any &, src::FlamingoDataWriter_ptr *); // non-copying
- ::CORBA::Boolean operator>>= (const ::CORBA::Any &, src::FlamingoDataWriter_ptr &);
-TAO_END_VERSIONED_NAMESPACE_DECL
-
-
-
-#endif
-
-// TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\any_op_ch.cpp:44
-
-
-
-#if defined (ACE_ANY_OPS_USE_NAMESPACE)
-
-namespace src
-{
-   void operator<<= ( ::CORBA::Any &, FlamingoDataReader_ptr); // copying
-   void operator<<= ( ::CORBA::Any &, FlamingoDataReader_ptr *); // non-copying
-   ::CORBA::Boolean operator>>= (const ::CORBA::Any &, FlamingoDataReader_ptr &);
-}
-
-#else
-
-
-TAO_BEGIN_VERSIONED_NAMESPACE_DECL
-
- void operator<<= (::CORBA::Any &, src::FlamingoDataReader_ptr); // copying
- void operator<<= (::CORBA::Any &, src::FlamingoDataReader_ptr *); // non-copying
- ::CORBA::Boolean operator>>= (const ::CORBA::Any &, src::FlamingoDataReader_ptr &);
-TAO_END_VERSIONED_NAMESPACE_DECL
-
-
-
-#endif
-
-// TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:1703
+// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:1703
 #if defined (__ACE_INLINE__)
 #include "FlamingoTypeSupportC.inl"
 #endif /* defined INLINE */
+
+#include /**/ "ace/post.h"
 
 #endif /* ifndef */
 

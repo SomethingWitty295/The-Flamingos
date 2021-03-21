@@ -26,10 +26,12 @@
  **/
 
 // TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:152
+// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:152
 
-#ifndef _TAO_IDL_FLAMINGOC_DHOYPI_H_
-#define _TAO_IDL_FLAMINGOC_DHOYPI_H_
+#ifndef _TAO_IDL_FLAMINGOC_23S1QL_H_
+#define _TAO_IDL_FLAMINGOC_23S1QL_H_
+
+#include /**/ "ace/pre.h"
 
 
 #include /**/ "ace/config-all.h"
@@ -39,8 +41,6 @@
 #endif /* ACE_LACKS_PRAGMA_ONCE */
 
 
-#include "tao/AnyTypeCode/AnyTypeCode_methods.h"
-#include "tao/AnyTypeCode/Any.h"
 #include "tao/ORB.h"
 #include "tao/Basic_Types.h"
 #include "tao/String_Manager_T.h"
@@ -65,13 +65,13 @@
 #define TAO_EXPORT_MACRO 
 
 // TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_module\module_ch.cpp:38
+// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_module\module_ch.cpp:38
 
 namespace src
 {
 
   // TAO_IDL - Generated from
-  // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_type.cpp:261
+  // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_type.cpp:261
 
   struct Flamingo;
 
@@ -88,19 +88,17 @@ namespace src
     Flamingo_out;
 
   // TAO_IDL - Generated from
-  // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_structure\structure_ch.cpp:51
+  // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_structure\structure_ch.cpp:51
 
   struct  Flamingo
   {
 
     // TAO_IDL - Generated from
-    // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_type.cpp:307
+    // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_type.cpp:307
 
     
     typedef Flamingo_var _var_type;
     typedef Flamingo_out _out_type;
-
-    static void _tao_any_destructor (void *);
     
     ::TAO::String_Manager dateAndTime;
     ::TAO::String_Manager name;
@@ -109,18 +107,13 @@ namespace src
     ::CORBA::Long daysInCurrentMonth;
   };
 
-  // TAO_IDL - Generated from
-  // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_typecode\typecode_decl.cpp:37
-
-  extern  ::CORBA::TypeCode_ptr const _tc_Flamingo;
-
 // TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_module\module_ch.cpp:67
+// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_module\module_ch.cpp:67
 
 } // module src
 
 // TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_arg_traits.cpp:68
+// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_arg_traits.cpp:68
 
 TAO_BEGIN_VERSIONED_NAMESPACE_DECL
 
@@ -130,14 +123,14 @@ namespace TAO
 {
 
   // TAO_IDL - Generated from
-  // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_arg_traits.cpp:947
+  // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_arg_traits.cpp:947
 
   template<>
   class Arg_Traits< ::src::Flamingo>
     : public
         Var_Size_Arg_Traits_T<
             ::src::Flamingo,
-            TAO::Any_Insert_Policy_Stream
+            TAO::Any_Insert_Policy_Noop
           >
   {
   };
@@ -148,7 +141,7 @@ TAO_END_VERSIONED_NAMESPACE_DECL
 
 
 // TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_traits.cpp:62
+// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_traits.cpp:62
 
 TAO_BEGIN_VERSIONED_NAMESPACE_DECL
 
@@ -161,37 +154,7 @@ TAO_END_VERSIONED_NAMESPACE_DECL
 
 
 // TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_structure\any_op_ch.cpp:45
-
-
-
-#if defined (ACE_ANY_OPS_USE_NAMESPACE)
-
-namespace src
-{
-   void operator<<= (::CORBA::Any &, const ::src::Flamingo &); // copying version
-   void operator<<= (::CORBA::Any &, ::src::Flamingo*); // noncopying version
-   ::CORBA::Boolean operator>>= (const ::CORBA::Any &, ::src::Flamingo *&); // deprecated
- ::CORBA::Boolean operator>>= (const ::CORBA::Any &, const ::src::Flamingo *&);
-}
-
-#else
-
-
-TAO_BEGIN_VERSIONED_NAMESPACE_DECL
-
- void operator<<= (::CORBA::Any &, const src::Flamingo &); // copying version
- void operator<<= (::CORBA::Any &, src::Flamingo*); // noncopying version
- ::CORBA::Boolean operator>>= (const ::CORBA::Any &, src::Flamingo *&); // deprecated
- ::CORBA::Boolean operator>>= (const ::CORBA::Any &, const src::Flamingo *&);
-TAO_END_VERSIONED_NAMESPACE_DECL
-
-
-
-#endif
-
-// TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_structure\cdr_op_ch.cpp:46
+// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_structure\cdr_op_ch.cpp:46
 
 
 TAO_BEGIN_VERSIONED_NAMESPACE_DECL
@@ -204,10 +167,12 @@ TAO_END_VERSIONED_NAMESPACE_DECL
 
 
 // TAO_IDL - Generated from
-// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:1703
+// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:1703
 #if defined (__ACE_INLINE__)
 #include "FlamingoC.inl"
 #endif /* defined INLINE */
+
+#include /**/ "ace/post.h"
 
 #endif /* ifndef */
 

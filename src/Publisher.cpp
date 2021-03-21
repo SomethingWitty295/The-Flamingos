@@ -140,6 +140,7 @@ int main(int argc, char *argv[])
             return 1;
         }
     }
+    return 0;
 
     //dev guide ends here I believe
 }

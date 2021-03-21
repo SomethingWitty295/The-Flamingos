@@ -1,0 +1,6 @@
+﻿  DataReaderListenerImpl.cpp
+  Subscriber.cpp
+C:\Users\Tavien\Desktop\OpenDDS-3.16\The-Flamingos\src\Subscriber.cpp(67,5): warning C4102: 'std': unreferenced label
+  Generating Code...
+C:\Users\Tavien\Desktop\OpenDDS-3.16\The-Flamingos\src\Subscriber.cpp(83): warning C4715: 'ace_main_i': not all control paths return a value
+  Flamingo_Subscriber.vcxproj -> C:\Users\Tavien\Desktop\OpenDDS-3.16\The-Flamingos\src\subscriber.exe
