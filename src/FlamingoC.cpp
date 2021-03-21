@@ -26,7 +26,7 @@
  **/
 
 // TAO_IDL - Generated from
-// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:376
+// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:376
 
 
 #include "FlamingoC.h"
@@ -37,7 +37,7 @@
 #endif /* !defined INLINE */
 
 // TAO_IDL - Generated from
-// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_structure\cdr_op_cs.cpp:52
+// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_structure\cdr_op_cs.cpp:52
 
 TAO_BEGIN_VERSIONED_NAMESPACE_DECL
 

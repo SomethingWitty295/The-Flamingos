@@ -1,8 +1,13 @@
-﻿  FlamingoC.cpp
+﻿  Invoking "C:\Users\Corey\Desktop\OpenDDS-3.16\ACE_wrappers\bin\tao_idl and ..\..\bin\opendds_idl on Flamingo.idl"
+  tao-idli_zr7iE6.cpp
+  tao-idli_QDSdNM.cpp
+  Invoking "C:\Users\Corey\Desktop\OpenDDS-3.16\ACE_wrappers\bin\tao_idl on FlamingoTypeSupport.idl"
+  tao-idli_GBVW2F.cpp
+  FlamingoC.cpp
   FlamingoS.cpp
   FlamingoTypeSupportC.cpp
   FlamingoTypeSupportImpl.cpp
   FlamingoTypeSupportS.cpp
   Publisher.cpp
   Generating Code...
-  Flamingo_Publisher.vcxproj -> C:\Users\Tavien\Desktop\OpenDDS-3.16\The-Flamingos\src\publisher.exe
+  Flamingo_Publisher.vcxproj -> C:\Users\Corey\Desktop\OpenDDS-3.16\The-Flamingos\src\.\publisher.exe

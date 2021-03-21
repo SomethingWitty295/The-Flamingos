@@ -25,59 +25,125 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     //INITIALIZING THE PARTICIPANT
-
-    DDS::DomainParticipantFactory_var dpf = TheParticipantFactoryWithArgs(argc, argv);
-    DDS::DomainParticipant_var participant = dpf->create_participant(42, //domain ID
-                                                                     PARTICIPANT_QOS_DEFAULT,
-                                                                     0, //No listener required
-                                                                     OpenDDS::DCPS::DEFAULT_STATUS_MASK);
-    if (!participant)
+    try
     {
-        std::cerr << "create_participant failed." << std::endl;
-        return 1;
+        DDS::DomainParticipantFactory_var dpf = TheParticipantFactoryWithArgs(argc, argv);
+        DDS::DomainParticipant_var participant = dpf->create_participant(42, //domain ID
+                                                                         PARTICIPANT_QOS_DEFAULT,
+                                                                         0, //No listener required
+                                                                         OpenDDS::DCPS::DEFAULT_STATUS_MASK);
+        if (!participant)
+        {
+            std::cerr << "create_participant failed." << std::endl;
+            return 1;
+        }
+
+        src::FlamingoTypeSupport_var mts = new src::FlamingoTypeSupportImpl();
+
+        if (DDS::RETCODE_OK != mts->register_type(participant, ""))
+        {
+            std::cerr << "register_type failed." << std::endl;
+            return 1;
+        }
+        CORBA::String_var type_name = mts->get_type_name();
+
+        DDS::Topic_var topic = participant->create_topic("Flamingo List",
+                                                         type_name,
+                                                         TOPIC_QOS_DEFAULT,
+                                                         0, // No listener required
+                                                         OpenDDS::DCPS::DEFAULT_STATUS_MASK);
+
+        if (!topic)
+        {
+            std::cerr << "create_topic failed." << std::endl;
+            return 1;
+        }
+
+        // Create the subscriber
+        DDS::Subscriber_var sub =
+            participant->create_subscriber(SUBSCRIBER_QOS_DEFAULT,
+                                           0, // No listener required
+                                           OpenDDS::DCPS::DEFAULT_STATUS_MASK);
+        if (!sub)
+        {
+        std:
+            cerr << "Failed to create_subscriber." << std::endl;
+            return 1;
+        }
+
+        DDS::DataReaderListener_var listener(new DataReaderListenerImpl);
+
+        DDS::DataReaderQos reader_qos;
+        sub->get_default_datareader_qos(reader_qos);
+        reader_qos.reliability.kind = DDS::RELIABLE_RELIABILITY_QOS;
+
+        //Create the Datareader
+        DDS::DataReader_var dr = sub->create_datareader(topic,
+                                                        reader_qos,
+                                                        listener,
+                                                        OpenDDS::DCPS::DEFAULT_STATUS_MASK);
+
+        if (!dr)
+        {
+            std::cerr << "create_datareader failed." << std::endl;
+            return 1;
+        }
+
+        src::FlamingoDataReader_var reader_i = src::FlamingoDataReader::_narrow(dr);
+
+        if (!reader_i)
+        {
+            ACE_ERROR_RETURN((LM_ERROR,
+                              ACE_TEXT("ERROR: %N:%l: main() -")
+                                  ACE_TEXT(" _narrow failed!\n")),
+                             1);
+        }
+
+        DDS::StatusCondition_var condition = dr->get_statuscondition();
+        condition->set_enabled_statuses(DDS::SUBSCRIPTION_MATCHED_STATUS);
+
+        DDS::WaitSet_var ws = new DDS::WaitSet;
+        ws->attach_condition(condition);
+
+        while (true)
+        {
+            DDS::SubscriptionMatchedStatus matches;
+            if (dr->get_subscription_matched_status(matches) != DDS::RETCODE_OK)
+            {
+                ACE_ERROR_RETURN((LM_ERROR,
+                                  ACE_TEXT("ERROR: %N:%l: main() -")
+                                      ACE_TEXT(" get_subscription_matched_status failed!\n")),
+                                 1);
+            }
+
+            if (matches.current_count == 0 && matches.total_count > 0)
+            {
+                break;
+            }
+
+            DDS::ConditionSeq conditions;
+            DDS::Duration_t timeout = {60, 0};
+            if (ws->wait(conditions, timeout) != DDS::RETCODE_OK)
+            {
+                ACE_ERROR_RETURN((LM_ERROR,
+                                  ACE_TEXT("ERROR: %N:%l: main() -")
+                                      ACE_TEXT(" wait failed!\n")),
+                                 1);
+            }
+        }
+        ws->detach_condition(condition);
+
+        // Clean-up!
+        participant->delete_contained_entities();
+        dpf->delete_participant(participant);
+
+        TheServiceParticipant->shutdown();
     }
-
-    src::FlamingoTypeSupport_var mts = new src::FlamingoTypeSupportImpl();
-
-    if (DDS::RETCODE_OK != mts->register_type(participant, "")) {
-        std::cerr << "register_type failed." << std::endl;
-        return 1;
-    }
-    CORBA::String_var type_name = mts->get_type_name ();
-
-    DDS::Topic_var topic = participant->create_topic("Flamingo List",
-                                                     type_name,
-                                                     TOPIC_QOS_DEFAULT,
-                                                     0, // No listener required
-                                                     OpenDDS::DCPS::DEFAULT_STATUS_MASK);
-
-    if (!topic)
+    catch (const CORBA::Exception &e)
     {
-        std::cerr << "create_topic failed." << std::endl;
-        return 1;
-    } 
-
-
-	// Create the subscriber
-	DDS::Subscriber_var sub =
-		participant->create_subscriber(SUBSCRIBER_QOS_DEFAULT,
-									   0,	// No listener required
-									   OpenDDS::DCPS::DEFAULT_STATUS_MASK);
-	if (!sub) {
-	std:cerr << "Failed to create_subscriber." << std::endl;
-		return 1;
-	}
-
-    DDS::DataReaderListener_var listener(new DataReaderListenerImpl);
-
-    //Create the Datareader
-    DDS::DataReader_var dr = sub->create_datareader(topic,
-                                                    DATAREADER_QOS_DEFAULT,
-                                                    listener,
-                                                    OpenDDS::DCPS::DEFAULT_STATUS_MASK);
-    if (!dr) {
-        std::cerr << "create_datareader failed." << std::endl;
+        e._tao_print_exception("Exception caught in main():");
         return 1;
     }
 
+    return 0;
 }

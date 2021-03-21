@@ -26,7 +26,7 @@
  **/
 
 // TAO_IDL - Generated from
-// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:376
+// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:376
 
 
 #include "FlamingoTypeSupportC.h"
@@ -38,7 +38,7 @@
 #endif /* !defined INLINE */
 
 // TAO_IDL - Generated from
-// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_cs.cpp:51
+// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_cs.cpp:51
 
 // Traits specializations for src::FlamingoTypeSupport.
 
@@ -163,7 +163,7 @@ src::FlamingoTypeSupport::marshal (TAO_OutputCDR & /* cdr */)
 }
 
 // TAO_IDL - Generated from
-// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_cs.cpp:51
+// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_cs.cpp:51
 
 // Traits specializations for src::FlamingoDataWriter.
 
@@ -288,7 +288,7 @@ src::FlamingoDataWriter::marshal (TAO_OutputCDR & /* cdr */)
 }
 
 // TAO_IDL - Generated from
-// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_cs.cpp:51
+// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_interface\interface_cs.cpp:51
 
 // Traits specializations for src::FlamingoDataReader.
 

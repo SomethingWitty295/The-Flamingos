@@ -9,7 +9,7 @@
       <UniqueIdentifier>{2990FA4C-FECA-1BAD-F819-80180000002E}</UniqueIdentifier>
       <Extensions>idl</Extensions>
     </Filter>
-    <Filter Include="Idl And Typesupport Files">
+    <Filter Include="Typesupport And Idl Files">
       <UniqueIdentifier>{9E235CA7-FECA-1BAD-F819-80180000002E}</UniqueIdentifier>
       <Extensions>idl</Extensions>
     </Filter>
@@ -29,7 +29,7 @@
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Flamingo.idl">
-      <Filter>Idl And Typesupport Files</Filter>
+      <Filter>Typesupport And Idl Files</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

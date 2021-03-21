@@ -17,7 +17,7 @@
       <UniqueIdentifier>{2990FA4C-FECA-1BAD-F819-80180000002E}</UniqueIdentifier>
       <Extensions>idl</Extensions>
     </Filter>
-    <Filter Include="Typesupport And Idl Files">
+    <Filter Include="Idl And Typesupport Files">
       <UniqueIdentifier>{9E235CA7-FECA-1BAD-F819-80180000002E}</UniqueIdentifier>
       <Extensions>idl</Extensions>
     </Filter>
@@ -50,6 +50,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DataReaderListenerImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="FlamingoC.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -81,7 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Flamingo.idl">
-      <Filter>Typesupport And Idl Files</Filter>
+      <Filter>Idl And Typesupport Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

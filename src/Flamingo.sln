@@ -6,7 +6,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # this file will be lost the next time it is generated.
 #
 # MPC Command:
-# C:\Users\Tavien\Desktop\OpenDDS-3.16\ACE_wrappers\bin\mwc.pl -type vs2019 Flamingo.mwc
+# C:\Users\Corey\Desktop\OpenDDS-3.16\ACE_wrappers\bin\mwc.pl -type vs2019 Flamingo.mwc
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Flamingo_Idl", "Flamingo_Idl.vcxproj", "{E8AAE39E-FECA-1BAD-F819-80180000002E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Flamingo_Publisher", "Flamingo_Publisher.vcxproj", "{5FE21646-FECA-1BAD-F819-80180000002E}"

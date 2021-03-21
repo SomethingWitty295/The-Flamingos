@@ -26,10 +26,10 @@
  **/
 
 // TAO_IDL - Generated from
-// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:152
+// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:152
 
-#ifndef _TAO_IDL_FLAMINGOC_23S1QL_H_
-#define _TAO_IDL_FLAMINGOC_23S1QL_H_
+#ifndef _TAO_IDL_FLAMINGOC_LAYV5Z_H_
+#define _TAO_IDL_FLAMINGOC_LAYV5Z_H_
 
 #include /**/ "ace/pre.h"
 
@@ -65,13 +65,13 @@
 #define TAO_EXPORT_MACRO 
 
 // TAO_IDL - Generated from
-// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_module\module_ch.cpp:38
+// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_module\module_ch.cpp:38
 
 namespace src
 {
 
   // TAO_IDL - Generated from
-  // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_type.cpp:261
+  // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_type.cpp:261
 
   struct Flamingo;
 
@@ -88,13 +88,13 @@ namespace src
     Flamingo_out;
 
   // TAO_IDL - Generated from
-  // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_structure\structure_ch.cpp:51
+  // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_structure\structure_ch.cpp:51
 
   struct  Flamingo
   {
 
     // TAO_IDL - Generated from
-    // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_type.cpp:307
+    // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_type.cpp:307
 
     
     typedef Flamingo_var _var_type;
@@ -108,12 +108,12 @@ namespace src
   };
 
 // TAO_IDL - Generated from
-// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_module\module_ch.cpp:67
+// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_module\module_ch.cpp:67
 
 } // module src
 
 // TAO_IDL - Generated from
-// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_arg_traits.cpp:68
+// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_arg_traits.cpp:68
 
 TAO_BEGIN_VERSIONED_NAMESPACE_DECL
 
@@ -123,7 +123,7 @@ namespace TAO
 {
 
   // TAO_IDL - Generated from
-  // C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_arg_traits.cpp:947
+  // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_arg_traits.cpp:947
 
   template<>
   class Arg_Traits< ::src::Flamingo>
@@ -141,7 +141,7 @@ TAO_END_VERSIONED_NAMESPACE_DECL
 
 
 // TAO_IDL - Generated from
-// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_traits.cpp:62
+// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_traits.cpp:62
 
 TAO_BEGIN_VERSIONED_NAMESPACE_DECL
 
@@ -154,7 +154,7 @@ TAO_END_VERSIONED_NAMESPACE_DECL
 
 
 // TAO_IDL - Generated from
-// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_structure\cdr_op_ch.cpp:46
+// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_visitor_structure\cdr_op_ch.cpp:46
 
 
 TAO_BEGIN_VERSIONED_NAMESPACE_DECL
@@ -167,7 +167,7 @@ TAO_END_VERSIONED_NAMESPACE_DECL
 
 
 // TAO_IDL - Generated from
-// C:\Users\Tavien\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:1703
+// C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:1703
 #if defined (__ACE_INLINE__)
 #include "FlamingoC.inl"
 #endif /* defined INLINE */
