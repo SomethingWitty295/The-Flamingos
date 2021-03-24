@@ -15,12 +15,42 @@
 
 #include <The-Flamingos/src/FlamingoTypeSupportImpl.h>
 
+
 //#include "MessengerTypeSupportImpl.h"
 
 //#include "MessageTypeSupportImpl.h"
 
 int main(int argc, char *argv[])
 {
+    //Variables for sending message
+    char user_name[256]; //Might need to change this to get program working error free
+    char user_subject[256]; //Same with this
+    int num_of_messages;
+
+    //Welcome Message
+    std::cout << " " << std::endl;
+    std::cout << "//****************************************//" << std::endl;
+    std::cout << "//                                        //" << std::endl;
+    std::cout << "//                                        //" << std::endl;
+    std::cout << "//  Welcome to Team Flamingo's Black Box  //" << std::endl;
+    std::cout << "//               DDS Service              //" << std::endl;
+    std::cout << "//                                        //" << std::endl;
+    std::cout << "//                                        //" << std::endl;
+    std::cout << "//****************************************//" << std::endl;
+    std::cout << " " << std::endl;
+    
+    //Prompt the user for a name and subject
+    std::cout << "Please enter a name for the sender: ";
+    std::cin >> user_name;
+    std::cout << "\n";
+
+    std::cout << "Please enter the subject of the message: ";
+    std::cin >> user_subject;
+    std::cout << "\n"; 
+
+    std::cout << "How many messages do you want to send?: ";
+    std::cin >> num_of_messages;
+    std::cout << "\n";
     //INITIALIZING THE PARTICIPANT
 
     DDS::DomainParticipantFactory_var dpf = TheParticipantFactoryWithArgs(argc, argv);
@@ -124,13 +154,15 @@ int main(int argc, char *argv[])
     // Write samples
 
     src::Flamingo flamingo;
+    std::cout << " " << std::endl;
     flamingo.dateAndTime = "now";
-    flamingo.name = "Mo";
-    flamingo.subject = "Flamingo";
+    flamingo.name = user_name;
+    flamingo.subject = user_subject;
     flamingo.data = 0;
     flamingo.daysInCurrentMonth = 0;
+    std::cout << " " << std::endl;
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < num_of_messages; i++)
     {
         DDS::ReturnCode_t error = flamingo_writer->write(flamingo, DDS::HANDLE_NIL);
         flamingo.data++;
