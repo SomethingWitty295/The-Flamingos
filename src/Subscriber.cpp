@@ -25,17 +25,43 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     DDS::DomainParticipantFactory_var dpf = TheParticipantFactoryWithArgs(argc, argv);
+    bool receiving = false;
+    int domainId = 0;
+    string username = NULL;
+
 
     while (true)
     {
         std::cout << "r : Set Receiving\n";
         std::cout << "t : Set domain ID\n";
         std::cout << "u : Change username\n";
-        std::cout << "e : exit subscriber\n";
+        std::cout << "e : Exit subscriber\n";
 
         char input;
 
         std::cin >> input;
+
+        switch(input) {
+            case 'r':
+                receiving = !receiving;
+                std::cout << "Receiving = " + receiving;
+                std::cout << "\n";
+                break;
+            case 't':
+                setDomainID();
+                break;
+            case 'u':
+                std::cout << "Please set username: ";
+                std::cin >> username;
+                std::cout << "\nUsername set to " + username;
+                break;
+            case 'e':
+            return 0;
+        }
+
+        if (receiving) {
+            
+        }
     }
 
     //INITIALIZING THE PARTICIPANT
