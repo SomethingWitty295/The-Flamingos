@@ -24,10 +24,23 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+    DDS::DomainParticipantFactory_var dpf = TheParticipantFactoryWithArgs(argc, argv);
+
+    while (true)
+    {
+        std::cout << "r : Set Receiving\n";
+        std::cout << "t : Set domain ID\n";
+        std::cout << "u : Change username\n";
+        std::cout << "e : exit subscriber\n";
+
+        char input;
+
+        std::cin >> input;
+    }
+
     //INITIALIZING THE PARTICIPANT
     try
     {
-        DDS::DomainParticipantFactory_var dpf = TheParticipantFactoryWithArgs(argc, argv);
         DDS::DomainParticipant_var participant = dpf->create_participant(42, //domain ID
                                                                          PARTICIPANT_QOS_DEFAULT,
                                                                          0, //No listener required
