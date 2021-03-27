@@ -15,46 +15,121 @@
 
 #include <The-Flamingos/src/FlamingoTypeSupportImpl.h>
 
+#include <iostream>
+using namespace std;
 //#include "MessengerTypeSupportImpl.h"
 
 //#include "MessageTypeSupportImpl.h"
+void printInstructions(int domainID, string username, string topic);
+int send_message(int seconds, DDS::DomainParticipantFactory_var dpf, int domainID,
+                 string topicName, string username, string subject, int data,
+                 int daysInCurrentMonth, string dateAndTime);
+int send_message(src::Flamingo flamingoMessage, int seconds,
+                 DDS::DomainParticipantFactory_var dpf, int domainID,
+                 string topicName);
+int send_message(src::Flamingo flamingoMessage, int seconds,
+                 DDS::DomainParticipantFactory_var dpf, int domainID,
+                 string topicName, int num_of_messages);
 
 int main(int argc, char *argv[])
 {
+    DDS::DomainParticipantFactory_var dpf = TheParticipantFactoryWithArgs(argc, argv);
     //Variables for sending message
     //char user_name[20];    //Might need to change this to get program working error free
     //char user_subject[20]; //Same with this
     int num_of_messages;
-    std::string user_name;
-    std::string user_subject;
+    string user_name = "Default Username";
+    string user_subject = "Default Subject";
 
-    //Welcome Message
-    std::cout << " " << std::endl;
-    std::cout << "//****************************************//" << std::endl;
-    std::cout << "//                                        //" << std::endl;
-    std::cout << "//                                        //" << std::endl;
-    std::cout << "//  Welcome to Team Flamingo's Black Box  //" << std::endl;
-    std::cout << "//               DDS Service              //" << std::endl;
-    std::cout << "//                                        //" << std::endl;
-    std::cout << "//                                        //" << std::endl;
-    std::cout << "//****************************************//" << std::endl;
-    std::cout << " " << std::endl;
+    int domainID = 42;
+    //string username = "Default";
+    string topicName = "Flamingo List";
+    int generic_data = 0;
+    int number_of_messages = 1;
 
-    //Prompt the user for a name and subject
-    std::cout << "Please enter a name for the sender: ";
-    std::cin >> user_name;
+    std::cout << "------------------------------------\n";
+    std::cout << "|  ___ _            _                |\n";
+    std::cout << "| | __| |__ _ _ __ (_)_ _  __ _ ___  |\n";
+    std::cout << "| | _|| / _` | '  \\| | ' \\/ _` / _ \\ |\n";
+    std::cout << "| |_| |_\\__,_|_|_|_|_|_||_\\__, \\___/ |\n";
+    std::cout << "|   publisher             |___/      |\n";
+    std::cout << "------------------------------------\n";
 
-    std::cout << "Please enter the subject of the message: ";
-    std::cin >> user_subject;
-    std::cout << "\n";
+    src::Flamingo flamingo;
+    flamingo.dateAndTime = "now";
+    flamingo.name = user_name.c_str();
+    flamingo.subject = user_subject.c_str();
+    flamingo.data = generic_data;
+    flamingo.daysInCurrentMonth = 0;
 
-    std::cout << "How many messages do you want to send?: ";
-    std::cin >> num_of_messages;
-    std::cout << "\n";
-    //INITIALIZING THE PARTICIPANT
+    while (true)
+    {
+        printInstructions(domainID, user_name, topicName);
 
-    DDS::DomainParticipantFactory_var dpf = TheParticipantFactoryWithArgs(argc, argv);
-    DDS::DomainParticipant_var participant = dpf->create_participant(42, //domain ID
+        char input;
+
+        cin >> input;
+
+        switch (input)
+        {
+        case 'r':
+            std::cout << "How many messages do you want to send?: ";
+            std::cin >> num_of_messages;
+            std::cout << "\n";
+            std::cout << "Set timeout time in seconds:";
+            int seconds;
+            std::cin >> seconds;
+            std::cout << "\nWaiting...\n";
+            send_message(flamingo, seconds, dpf,
+                         domainID, topicName, num_of_messages);
+            std::cout << "Message correctly sent!\n";
+            break;
+        case 't':
+            std::cout << "Enter desired domain ID: ";
+            std::cin >> domainID;
+            std::cout << "\n";
+            break;
+        case 'u':
+            std::cout << "Please set username: ";
+            std::cin >> user_name;
+            flamingo.name = user_name.c_str();
+            std::cout << "\n";
+            break;
+        case 'e':
+            return 0;
+        case 'n':
+            std::cout << "Enter desired topic name:";
+            std::cin >> topicName;
+            std::cout << "\n";
+            break;
+        case 'p': // edit message to send out
+            char pinput;
+            string subject_change;
+            int data_change;
+            cout << "Which field in your message do you want to change?\n";
+            cin >> pinput;
+            switch (pinput)
+            {
+            case 's':
+                cout << "Set subject to: ";
+                cin >> subject_change;
+                flamingo.subject = subject_change.c_str();
+                break;
+            case 'd':
+                cout << "Set data to: ";
+                cin >> data_change;
+                flamingo.data = data_change;
+                break;
+            }
+        }
+    }
+}
+
+int send_message(src::Flamingo flamingoMessage, int seconds,
+                 DDS::DomainParticipantFactory_var dpf, int domainID,
+                 string topicName, int num_of_messages)
+{
+    DDS::DomainParticipant_var participant = dpf->create_participant(domainID, //domain ID
                                                                      PARTICIPANT_QOS_DEFAULT,
                                                                      0, //No listener required
                                                                      OpenDDS::DCPS::DEFAULT_STATUS_MASK);
@@ -75,7 +150,7 @@ int main(int argc, char *argv[])
     }
 
     CORBA::String_var type_name = mts->get_type_name();
-    DDS::Topic_var topic = participant->create_topic("Flamingo List",
+    DDS::Topic_var topic = participant->create_topic(topicName.c_str(),
                                                      type_name,
                                                      TOPIC_QOS_DEFAULT,
                                                      0, // No listener required
@@ -147,25 +222,10 @@ int main(int argc, char *argv[])
 
     ws->detach_condition(condition);
 
-    //For more details about status, conditions, and wait sets, see Ch. 4.
-
-    // SAMPLE PUBLICATION
-
-    // Write samples
-
-    src::Flamingo flamingo;
-    std::cout << " " << std::endl;
-    flamingo.dateAndTime = "now";
-    flamingo.name = user_name.c_str();
-    flamingo.subject = user_subject.c_str();
-    flamingo.data = 0;
-    flamingo.daysInCurrentMonth = 0;
-    std::cout << " " << std::endl;
-
     for (int i = 0; i < num_of_messages; i++)
     {
-        DDS::ReturnCode_t error = flamingo_writer->write(flamingo, DDS::HANDLE_NIL);
-        flamingo.data++;
+        DDS::ReturnCode_t error = flamingo_writer->write(flamingoMessage, DDS::HANDLE_NIL);
+        flamingoMessage.data++;
         if (error != DDS::RETCODE_OK)
         {
             // Log or otherwise handle the error condition
@@ -180,6 +240,24 @@ int main(int argc, char *argv[])
     TheServiceParticipant->shutdown();
 
     return 0;
+}
 
-    //dev guide ends here I believe
+void printInstructions(int domainID, string username, string topic)
+{
+    std::cout << "\n-------------------------.\n";
+    std::cout << "username: " + username + " | ";
+    std::cout << "dID: " << domainID;
+    std::cout << " | ";
+    std::cout << "topic: " + topic;
+    std::cout << "\n-------------------------.\n";
+    std::cout << "r: Send data.\n";
+    std::cout << "t: Set desired Domain ID.\n";
+    std::cout << "u: Set username.\n";
+    std::cout << "n: Set desired Topic.\n";
+    cout << "p: change flamingo struct to send.\n";
+    std::cout << "e: exit publisher.\n";
+}
+
+void printFlamingoStruct()
+{
 }

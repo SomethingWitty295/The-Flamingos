@@ -181,10 +181,13 @@ int receiving(int seconds, DDS::DomainParticipantFactory_var dpf, int domainID, 
             DDS::Duration_t timeout = {seconds, 0};
             if (ws->wait(conditions, timeout) != DDS::RETCODE_OK)
             {
-                ACE_ERROR_RETURN((LM_ERROR,
+                std::cout << "\nData could not be found at ";
+                std::cout << "DomainID=" + domainID;
+                std::cout << ", Topic name=" + topicName + "" << std::endl;
+                /*ACE_ERROR_RETURN((LM_ERROR,
                                   ACE_TEXT("ERROR: %N:%l: main() -")
                                       ACE_TEXT(" wait failed!\n")),
-                                 1);
+                                 1);*/
             }
         }
         ws->detach_condition(condition);
