@@ -15,7 +15,6 @@
 
 #include <The-Flamingos/src/FlamingoTypeSupportImpl.h>
 
-
 //#include "MessengerTypeSupportImpl.h"
 
 //#include "MessageTypeSupportImpl.h"
@@ -23,9 +22,11 @@
 int main(int argc, char *argv[])
 {
     //Variables for sending message
-    char user_name[256]; //Might need to change this to get program working error free
-    char user_subject[256]; //Same with this
+    //char user_name[20];    //Might need to change this to get program working error free
+    //char user_subject[20]; //Same with this
     int num_of_messages;
+    std::string user_name;
+    std::string user_subject;
 
     //Welcome Message
     std::cout << " " << std::endl;
@@ -38,15 +39,14 @@ int main(int argc, char *argv[])
     std::cout << "//                                        //" << std::endl;
     std::cout << "//****************************************//" << std::endl;
     std::cout << " " << std::endl;
-    
+
     //Prompt the user for a name and subject
     std::cout << "Please enter a name for the sender: ";
     std::cin >> user_name;
-    std::cout << "\n";
 
     std::cout << "Please enter the subject of the message: ";
     std::cin >> user_subject;
-    std::cout << "\n"; 
+    std::cout << "\n";
 
     std::cout << "How many messages do you want to send?: ";
     std::cin >> num_of_messages;
@@ -156,8 +156,8 @@ int main(int argc, char *argv[])
     src::Flamingo flamingo;
     std::cout << " " << std::endl;
     flamingo.dateAndTime = "now";
-    flamingo.name = user_name;
-    flamingo.subject = user_subject;
+    flamingo.name = user_name.c_str();
+    flamingo.subject = user_subject.c_str();
     flamingo.data = 0;
     flamingo.daysInCurrentMonth = 0;
     std::cout << " " << std::endl;
@@ -172,6 +172,13 @@ int main(int argc, char *argv[])
             return 1;
         }
     }
+
+    // Clean-up!
+    participant->delete_contained_entities();
+    dpf->delete_participant(participant);
+
+    TheServiceParticipant->shutdown();
+
     return 0;
 
     //dev guide ends here I believe
