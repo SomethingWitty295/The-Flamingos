@@ -188,6 +188,8 @@ int receiving(int seconds, DDS::DomainParticipantFactory_var dpf, int domainID, 
                                   ACE_TEXT("ERROR: %N:%l: main() -")
                                       ACE_TEXT(" wait failed!\n")),
                                  1);*/
+                
+                break; //Serves our purpose, maybe a better way to implement this later? -Tavien
             }
         }
         ws->detach_condition(condition);
