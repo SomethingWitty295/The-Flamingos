@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
             std::cout << "How many messages do you want to send?: ";
             std::cin >> num_of_messages;
             std::cout << "\n";
-            std::cout << "Set timeout time in seconds:";
+            std::cout << "Set timeout time in seconds: ";
             int seconds;
             std::cin >> seconds;
             std::cout << "\nWaiting...\n";
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
         case 'e':
             return 0;
         case 'n':
-            std::cout << "Enter desired topic name:";
+            std::cout << "Enter desired topic name: ";
             std::cin >> topicName;
             std::cout << "\n";
             break;
