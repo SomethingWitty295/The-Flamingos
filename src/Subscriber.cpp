@@ -53,10 +53,11 @@ int main(int argc, char *argv[])
         switch (input)
         {
         case 'r':
-            std::cout << "Set timeout time in seconds:";
+            std::cout << "Set timeout time in seconds: ";
             int seconds;
             std::cin >> seconds;
             std::cout << "\nWaiting...\n";
+            std::cout << "\n";
             receiving(seconds, dpf, domainID, topicName);
             break;
         case 't':
@@ -67,13 +68,13 @@ int main(int argc, char *argv[])
         case 'u':
             std::cout << "Please set username: ";
             std::cin >> username;
-            std::cout << "\nUsername set to " + username;
+            std::cout << "\nUsername set to " << username;
             std::cout << "\n";
             break;
         case 'e':
             return 0;
         case 'n':
-            std::cout << "Enter desired topic name:";
+            std::cout << "Enter desired topic name: ";
             std::cin >> topicName;
             std::cout << "\n";
             break;
@@ -182,8 +183,8 @@ int receiving(int seconds, DDS::DomainParticipantFactory_var dpf, int domainID, 
             if (ws->wait(conditions, timeout) != DDS::RETCODE_OK)
             {
                 std::cout << "\nData could not be found at ";
-                std::cout << "DomainID=" + domainID;
-                std::cout << ", Topic name=" + topicName + "" << std::endl;
+                std::cout << "DomainID: " << domainID;
+                std::cout << ", Topic name: " << topicName << "" << std::endl;
                 /*ACE_ERROR_RETURN((LM_ERROR,
                                   ACE_TEXT("ERROR: %N:%l: main() -")
                                       ACE_TEXT(" wait failed!\n")),
@@ -211,10 +212,10 @@ int receiving(int seconds, DDS::DomainParticipantFactory_var dpf, int domainID, 
 void printInstructions(int domainID, string username, string topic)
 {
     std::cout << "\n-------------------------.\n";
-    std::cout << "username: " + username + " | ";
+    std::cout << "username: " << username << " | ";
     std::cout << "dID: " << domainID;
     std::cout << " | ";
-    std::cout << "topic: " + topic;
+    std::cout << "topic: " << topic;
     std::cout << "\n-------------------------.\n";
     std::cout << "r: Open to receive data.\n";
     std::cout << "t: Set desired Domain ID.\n";
