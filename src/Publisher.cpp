@@ -30,6 +30,7 @@ int send_message(src::Flamingo flamingoMessage, int seconds,
 int send_message(src::Flamingo flamingoMessage, int seconds,
                  DDS::DomainParticipantFactory_var dpf, int domainID,
                  string topicName, int num_of_messages);
+char* getTime();
 
 int main(int argc, char *argv[])
 {
@@ -80,6 +81,7 @@ int main(int argc, char *argv[])
             int seconds;
             std::cin >> seconds;
             std::cout << "\nWaiting...\n";
+            flamingo.dateAndTime = getTime();
             send_message(flamingo, seconds, dpf,
                          domainID, topicName, num_of_messages);
             break;
@@ -265,4 +267,11 @@ void printInstructions(int domainID, string username, string topic)
 
 void printFlamingoStruct()
 {
+}
+
+char* getTime()
+{
+    time_t now = time(0);
+    char* curTime = ctime(&now);
+    return curTime;
 }
