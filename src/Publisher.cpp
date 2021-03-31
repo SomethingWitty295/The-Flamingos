@@ -31,6 +31,7 @@ int send_message(src::Flamingo flamingoMessage, int seconds,
                  DDS::DomainParticipantFactory_var dpf, int domainID,
                  string topicName, int num_of_messages);
 char* getTime();
+int daysInCurrentMonth();
 
 int main(int argc, char *argv[])
 {
@@ -82,6 +83,7 @@ int main(int argc, char *argv[])
             std::cin >> seconds;
             std::cout << "\nWaiting...\n";
             flamingo.dateAndTime = getTime();
+            flamingo.daysInCurrentMonth = daysInCurrentMonth();
             send_message(flamingo, seconds, dpf,
                          domainID, topicName, num_of_messages);
             break;
@@ -274,4 +276,41 @@ char* getTime()
     time_t now = time(0);
     char* curTime = ctime(&now);
     return curTime;
+}
+
+int daysInCurrentMonth()
+{
+    time_t now = time(0);
+    tm* lt = localtime(&now);
+    switch (lt->tm_mon + 1) {
+    case 1:
+        return 31;
+    case 2:
+        if (((1900 + lt->tm_year) % 4) == 0) {
+            return 29;
+        }
+        else {
+            return 28;
+        }
+    case 3:
+        return 31;
+    case 4:
+        return 30;
+    case 5:
+        return 31;
+    case 6:
+        return 30;
+    case 7:
+        return 31;
+    case 8:
+        return 31;
+    case 9:
+        return 30;
+    case 10:
+        return 31;
+    case 11:
+        return 30;
+    case 12:
+        return 31;
+    }
 }
