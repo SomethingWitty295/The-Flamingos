@@ -82,7 +82,6 @@ int main(int argc, char *argv[])
             std::cout << "\nWaiting...\n";
             send_message(flamingo, seconds, dpf,
                          domainID, topicName, num_of_messages);
-            std::cout << "Message correctly sent!\n";
             break;
         case 't':
             std::cout << "Enter desired domain ID: ";
@@ -197,40 +196,46 @@ int send_message(src::Flamingo flamingoMessage, int seconds,
     DDS::WaitSet_var ws = new DDS::WaitSet;
     ws->attach_condition(condition);
 
-    while (true)
-    {
-        DDS::PublicationMatchedStatus matches;
-        if (writer->get_publication_matched_status(matches) != DDS::RETCODE_OK)
-        {
-            std::cerr << "get_publication_matched_status failed!" << std::endl;
-            return 1;
-        }
+    // while started here
 
+    DDS::PublicationMatchedStatus matches;
+    if (writer->get_publication_matched_status(matches) != DDS::RETCODE_OK)
+    {
+        std::cerr << "get_publication_matched_status failed!" << std::endl;
+        return 1;
+    }
+
+    /*
         if (matches.current_count >= 1)
         {
             break;
-        }
+        }*/
 
-        DDS::ConditionSeq conditions;
-        DDS::Duration_t timeout = {60, 0};
-        if (ws->wait(conditions, timeout) != DDS::RETCODE_OK)
-        {
-            std::cerr << "wait failed!" << std::endl;
-            return 1;
-        }
-    }
-
-    ws->detach_condition(condition);
-
-    for (int i = 0; i < num_of_messages; i++)
+    DDS::ConditionSeq conditions;
+    DDS::Duration_t timeout = {seconds, 0};
+    if (ws->wait(conditions, timeout) != DDS::RETCODE_OK)
     {
-        DDS::ReturnCode_t error = flamingo_writer->write(flamingoMessage, DDS::HANDLE_NIL);
-        flamingoMessage.data++;
-        if (error != DDS::RETCODE_OK)
+        std::cerr << "wait failed!"
+                  << std::endl;
+        return 1;
+    }
+    else
+    {
+
+        ws->detach_condition(condition);
+
+        for (int i = 0; i < num_of_messages; i++)
         {
-            // Log or otherwise handle the error condition
-            return 1;
+            DDS::ReturnCode_t error = flamingo_writer->write(flamingoMessage, DDS::HANDLE_NIL);
+            flamingoMessage.data++;
+            if (error != DDS::RETCODE_OK)
+            {
+                // Log or otherwise handle the error condition
+                std::cerr << "flamingo_writer returned ! DDS::RETCODE_OK\n";
+                return 1;
+            }
         }
+        std::cerr << "Message correctly sent!\n";
     }
 
     // Clean-up!

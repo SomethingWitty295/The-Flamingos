@@ -86,7 +86,7 @@ int receiving(int seconds, DDS::DomainParticipantFactory_var dpf, int domainID, 
 {
     try
     {
-        DDS::DomainParticipant_var participant = dpf->create_participant(42, //domain ID
+        DDS::DomainParticipant_var participant = dpf->create_participant(domainID, //domain ID
                                                                          PARTICIPANT_QOS_DEFAULT,
                                                                          0, //No listener required
                                                                          OpenDDS::DCPS::DEFAULT_STATUS_MASK);
@@ -105,7 +105,7 @@ int receiving(int seconds, DDS::DomainParticipantFactory_var dpf, int domainID, 
         }
         CORBA::String_var type_name = mts->get_type_name();
 
-        DDS::Topic_var topic = participant->create_topic("Flamingo List",
+        DDS::Topic_var topic = participant->create_topic(topicName.c_str(),
                                                          type_name,
                                                          TOPIC_QOS_DEFAULT,
                                                          0, // No listener required
@@ -162,38 +162,39 @@ int receiving(int seconds, DDS::DomainParticipantFactory_var dpf, int domainID, 
         DDS::WaitSet_var ws = new DDS::WaitSet;
         ws->attach_condition(condition);
 
-        while (true)
-        {
-            DDS::SubscriptionMatchedStatus matches;
-            if (dr->get_subscription_matched_status(matches) != DDS::RETCODE_OK)
-            {
-                ACE_ERROR_RETURN((LM_ERROR,
-                                  ACE_TEXT("ERROR: %N:%l: main() -")
-                                      ACE_TEXT(" get_subscription_matched_status failed!\n")),
-                                 1);
-            }
+        //while started here
 
+        DDS::SubscriptionMatchedStatus matches;
+        if (dr->get_subscription_matched_status(matches) != DDS::RETCODE_OK)
+        {
+            ACE_ERROR_RETURN((LM_ERROR,
+                              ACE_TEXT("ERROR: %N:%l: main() -")
+                                  ACE_TEXT(" get_subscription_matched_status failed!\n")),
+                             1);
+        }
+        /*
             if (matches.current_count == 0 && matches.total_count > 0)
             {
                 break;
-            }
+            }*/
 
-            DDS::ConditionSeq conditions;
-            DDS::Duration_t timeout = {seconds, 0};
-            if (ws->wait(conditions, timeout) != DDS::RETCODE_OK)
-            {
-                std::cout << "\nData could not be found at ";
-                std::cout << "DomainID: " << domainID;
-                std::cout << ", Topic name: " << topicName << "" << std::endl;
-                /*ACE_ERROR_RETURN((LM_ERROR,
+        DDS::ConditionSeq conditions;
+        DDS::Duration_t timeout = {seconds, 0};
+        if (ws->wait(conditions, timeout) != DDS::RETCODE_OK)
+        {
+            std::cout << "\nData could not be found at ";
+            std::cout << "DomainID: " << domainID;
+            std::cout << ", Topic name: " << topicName << "" << std::endl;
+            /*ACE_ERROR_RETURN((LM_ERROR,
                                   ACE_TEXT("ERROR: %N:%l: main() -")
                                       ACE_TEXT(" wait failed!\n")),
                                  1);*/
-                
-                break; //Serves our purpose, maybe a better way to implement this later? -Tavien
-            }
+
+            return 1;
+            //break; //Serves our purpose, maybe a better way to implement this later? -Tavien
         }
-        ws->detach_condition(condition);
+
+        //ended here
 
         // Clean-up!
         participant->delete_contained_entities();
