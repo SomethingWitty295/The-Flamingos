@@ -60,16 +60,18 @@ void DataReaderListenerImpl::on_data_available(DDS::DataReader_ptr reader)
 
   if (error == DDS::RETCODE_OK)
   {
-    std::cout << "SampleInfo.sample_rank = " << info.sample_rank << std::endl;
-    std::cout << "SampleInfo.instance_state = " << info.instance_state << std::endl;
+    //std::cout << "SampleInfo.sample_rank = " << info.sample_rank << std::endl;
+    //std::cout << "SampleInfo.instance_state = " << info.instance_state << std::endl;
 
     if (info.valid_data)
     {
-      std::cout << "date/time: " << flamingo.dateAndTime.in() << std::endl
-                << "name: " << flamingo.name.in() << std::endl
-                << "subject: " << flamingo.subject.in() << std::endl
-                << "generic data: " << flamingo.data << std::endl
-                << "number for days in month: " << flamingo.daysInCurrentMonth << std::endl;
+      std::cout << "-------f-l-a-m-i-n-g-o-------\n";
+      std::cout << flamingo.dateAndTime.in() << std::endl
+                << "Name: " << flamingo.name.in() << std::endl
+                << "Subject: " << flamingo.subject.in() << std::endl
+                << "Generic Data: " << flamingo.data << std::endl
+                << "Number of days in the current month: " << flamingo.daysInCurrentMonth << std::endl;
+      std::cout << "------------e-n-d------------\n";
     }
   }
   else

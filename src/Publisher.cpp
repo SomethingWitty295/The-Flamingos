@@ -15,40 +15,37 @@
 
 #include <The-Flamingos/src/FlamingoTypeSupportImpl.h>
 
-#include <iostream>
-using namespace std;
 //#include "MessengerTypeSupportImpl.h"
 
 //#include "MessageTypeSupportImpl.h"
-void printInstructions(int domainID, string username, string topic);
-int send_message(int seconds, DDS::DomainParticipantFactory_var dpf, int domainID,
-                 string topicName, string username, string subject, int data,
-                 int daysInCurrentMonth, string dateAndTime);
-int send_message(src::Flamingo flamingoMessage, int seconds,
-                 DDS::DomainParticipantFactory_var dpf, int domainID,
-                 string topicName);
-int send_message(src::Flamingo flamingoMessage, int seconds,
-                 DDS::DomainParticipantFactory_var dpf, int domainID,
-                 string topicName, int num_of_messages);
-char* getTime();
+int sending(int seconds, DDS::DomainParticipantFactory_var dpf, int domainID, std::string topicName, std::string user_name, std::string user_subject, int num_of_messages, src::Flamingo flamingo);
+void printInstructions(int domainID, std::string username, std::string topic, std::string subject, int data);
+std::string getTime();
 int daysInCurrentMonth();
 
 int main(int argc, char *argv[])
 {
-    DDS::DomainParticipantFactory_var dpf = TheParticipantFactoryWithArgs(argc, argv);
     //Variables for sending message
     //char user_name[20];    //Might need to change this to get program working error free
     //char user_subject[20]; //Same with this
-    int num_of_messages;
-    string user_name = "Default Username";
-    string user_subject = "Default Subject";
-
+    DDS::DomainParticipantFactory_var dpf = TheParticipantFactoryWithArgs(argc, argv);
+    int num_of_messages = 1;
+    std::string user_name = "Default";
+    std::string user_subject = "Default";
+    std::string topicName = "Default";
     int domainID = 42;
-    //string username = "Default";
-    string topicName = "Flamingo List";
-    int generic_data = 0;
-    int number_of_messages = 1;
+    int attempt;
 
+    src::Flamingo flamingo;
+    flamingo.dateAndTime = getTime().c_str();
+
+    flamingo.name = user_name.c_str();
+    flamingo.subject = user_subject.c_str();
+    flamingo.data = 0;
+    flamingo.daysInCurrentMonth = daysInCurrentMonth();
+
+    //Welcome Message
+    std::cout << " " << std::endl;
     std::cout << "------------------------------------\n";
     std::cout << "|  ___ _            _                |\n";
     std::cout << "| | __| |__ _ _ __ (_)_ _  __ _ ___  |\n";
@@ -56,38 +53,39 @@ int main(int argc, char *argv[])
     std::cout << "| |_| |_\\__,_|_|_|_|_|_||_\\__, \\___/ |\n";
     std::cout << "|   publisher             |___/      |\n";
     std::cout << "------------------------------------\n";
-
-    src::Flamingo flamingo;
-    flamingo.dateAndTime = "now";
-    flamingo.name = user_name.c_str();
-    flamingo.subject = user_subject.c_str();
-    flamingo.data = generic_data;
-    flamingo.daysInCurrentMonth = 0;
+    std::cout << " " << std::endl;
 
     while (true)
     {
-        printInstructions(domainID, user_name, topicName);
+        flamingo.subject = user_subject.c_str();
+        flamingo.name = user_name.c_str();
+
+        printInstructions(domainID, user_name, topicName, user_subject, flamingo.data);
 
         char input;
 
-        cin >> input;
+        std::cin >> input;
 
         switch (input)
         {
-        case 'r':
-            std::cout << "How many messages do you want to send?: ";
-            std::cin >> num_of_messages;
-            std::cout << "\n";
-            std::cout << "Set timeout time in seconds: ";
+        case 's':
+            std::cout << "Set timeout time in seconds:";
             int seconds;
             std::cin >> seconds;
             std::cout << "\nWaiting...\n";
-            flamingo.dateAndTime = getTime();
-            flamingo.daysInCurrentMonth = daysInCurrentMonth();
-            send_message(flamingo, seconds, dpf,
-                         domainID, topicName, num_of_messages);
+            attempt = sending(seconds, dpf, domainID, topicName, user_name, user_subject, num_of_messages, flamingo);
+            if (attempt == 0)
+            {
+                std::cout << "Message was successfully sent!\n";
+                return 0;
+            }
+            else
+            {
+                std::cout << "Send attempt failed: Error code: " << attempt << std::endl;
+                return 1;
+            }
             break;
-        case 't':
+        case 'd':
             std::cout << "Enter desired domain ID: ";
             std::cin >> domainID;
             std::cout << "\n";
@@ -95,43 +93,46 @@ int main(int argc, char *argv[])
         case 'u':
             std::cout << "Please set username: ";
             std::cin >> user_name;
-            flamingo.name = user_name.c_str();
+            std::cout << "\nUsername set to " + user_name;
             std::cout << "\n";
             break;
         case 'e':
             return 0;
-        case 'n':
-            std::cout << "Enter desired topic name: ";
+        case 't':
+            std::cout << "Enter desired topic name:";
             std::cin >> topicName;
             std::cout << "\n";
             break;
-        case 'p': // edit message to send out
-            char pinput;
-            string subject_change;
-            int data_change;
-            cout << "Which field in your message do you want to change?\n";
-            cin >> pinput;
-            switch (pinput)
-            {
-            case 's':
-                cout << "Set subject to: ";
-                cin >> subject_change;
-                flamingo.subject = subject_change.c_str();
-                break;
-            case 'd':
-                cout << "Set data to: ";
-                cin >> data_change;
-                flamingo.data = data_change;
-                break;
-            }
+        case 'c':
+            std::cout << "Enter the Flamingo Subject:";
+            std::cin >> user_subject;
+            std::cout << "\nEnter Flamingo generic integer:";
+            std::cin >> flamingo.data;
+            break;
         }
     }
+
+    /*
+
+    //Prompt the user for a name and subject
+    std::cout << "Please enter a name for the sender: ";
+    std::cin >> user_name;
+
+    std::cout << "Please enter the subject of the message: ";
+    std::cin >> user_subject;
+    std::cout << "\n";
+
+    std::cout << "How many messages do you want to send?: ";
+    std::cin >> num_of_messages;
+    std::cout << "\n";
+    //INITIALIZING THE PARTICIPANT
+
+    */
 }
 
-int send_message(src::Flamingo flamingoMessage, int seconds,
-                 DDS::DomainParticipantFactory_var dpf, int domainID,
-                 string topicName, int num_of_messages)
+int sending(int seconds, DDS::DomainParticipantFactory_var dpf, int domainID, std::string topicName, std::string user_name, std::string user_subject, int num_of_messages, src::Flamingo flamingo)
 {
+    //DDS::DomainParticipantFactory_var dpf = TheParticipantFactoryWithArgs(argc, argv);
     DDS::DomainParticipant_var participant = dpf->create_participant(domainID, //domain ID
                                                                      PARTICIPANT_QOS_DEFAULT,
                                                                      0, //No listener required
@@ -200,46 +201,46 @@ int send_message(src::Flamingo flamingoMessage, int seconds,
     DDS::WaitSet_var ws = new DDS::WaitSet;
     ws->attach_condition(condition);
 
-    // while started here
-
-    DDS::PublicationMatchedStatus matches;
-    if (writer->get_publication_matched_status(matches) != DDS::RETCODE_OK)
+    while (true)
     {
-        std::cerr << "get_publication_matched_status failed!" << std::endl;
-        return 1;
-    }
+        DDS::PublicationMatchedStatus matches;
+        if (writer->get_publication_matched_status(matches) != DDS::RETCODE_OK)
+        {
+            std::cerr << "get_publication_matched_status failed!" << std::endl;
+            return 1;
+        }
 
-    /*
         if (matches.current_count >= 1)
         {
             break;
-        }*/
-
-    DDS::ConditionSeq conditions;
-    DDS::Duration_t timeout = {seconds, 0};
-    if (ws->wait(conditions, timeout) != DDS::RETCODE_OK)
-    {
-        std::cerr << "wait failed!"
-                  << std::endl;
-        return 1;
-    }
-    else
-    {
-
-        ws->detach_condition(condition);
-
-        for (int i = 0; i < num_of_messages; i++)
-        {
-            DDS::ReturnCode_t error = flamingo_writer->write(flamingoMessage, DDS::HANDLE_NIL);
-            flamingoMessage.data++;
-            if (error != DDS::RETCODE_OK)
-            {
-                // Log or otherwise handle the error condition
-                std::cerr << "flamingo_writer returned ! DDS::RETCODE_OK\n";
-                return 1;
-            }
         }
-        std::cerr << "Message correctly sent!\n";
+
+        DDS::ConditionSeq conditions;
+        DDS::Duration_t timeout = {seconds, 0};
+        if (ws->wait(conditions, timeout) != DDS::RETCODE_OK)
+        {
+            std::cerr << "wait failed!" << std::endl;
+            return 1;
+        }
+    }
+
+    ws->detach_condition(condition);
+
+    //For more details about status, conditions, and wait sets, see Ch. 4.
+
+    // SAMPLE PUBLICATION
+
+    // Write samples
+
+    for (int i = 0; i < num_of_messages; i++)
+    {
+        DDS::ReturnCode_t error = flamingo_writer->write(flamingo, DDS::HANDLE_NIL);
+        flamingo.data++;
+        if (error != DDS::RETCODE_OK)
+        {
+            // Log or otherwise handle the error condition
+            return 1;
+        }
     }
 
     // Clean-up!
@@ -249,47 +250,50 @@ int send_message(src::Flamingo flamingoMessage, int seconds,
     TheServiceParticipant->shutdown();
 
     return 0;
+
+    //dev guide ends here I believe
 }
 
-void printInstructions(int domainID, string username, string topic)
+void printInstructions(int domainID, std::string username, std::string topic, std::string subject, int data)
 {
-    std::cout << "\n-------------------------.\n";
+    std::cout << "\n-------------------------\n";
     std::cout << "username: " + username + " | ";
     std::cout << "dID: " << domainID;
     std::cout << " | ";
-    std::cout << "topic: " + topic;
-    std::cout << "\n-------------------------.\n";
-    std::cout << "r: Send data.\n";
-    std::cout << "t: Set desired Domain ID.\n";
+    std::cout << "topic: " << topic << std::endl;
+    std::cout << "Flamingo - Subject: " << subject;
+    std::cout << " | Generic Data: " << data;
+    std::cout << "\n-------------------------\n";
+    std::cout << "s: Try to send your data.\n";
+    std::cout << "d: Set desired Domain ID.\n";
     std::cout << "u: Set username.\n";
-    std::cout << "n: Set desired Topic.\n";
-    cout << "p: change flamingo struct to send.\n";
-    std::cout << "e: exit publisher.\n";
+    std::cout << "t: Set desired Topic.\n";
+    std::cout << "c: Change your Flamingo to send.\n";
+    std::cout << "e: Exit.\n";
 }
 
-void printFlamingoStruct()
-{
-}
-
-char* getTime()
+std::string getTime()
 {
     time_t now = time(0);
-    char* curTime = ctime(&now);
-    return curTime;
+    char *curTime = ctime(&now);
+    return std::string(curTime);
 }
 
 int daysInCurrentMonth()
 {
     time_t now = time(0);
-    tm* lt = localtime(&now);
-    switch (lt->tm_mon + 1) {
+    tm *lt = localtime(&now);
+    switch (lt->tm_mon + 1)
+    {
     case 1:
         return 31;
     case 2:
-        if (((1900 + lt->tm_year) % 4) == 0) {
+        if (((1900 + lt->tm_year) % 4) == 0)
+        {
             return 29;
         }
-        else {
+        else
+        {
             return 28;
         }
     case 3:

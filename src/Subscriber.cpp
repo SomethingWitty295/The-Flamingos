@@ -22,7 +22,7 @@
 #include <iostream>
 using namespace std;
 
-void printInstructions(int domainID, string username, string topic);
+void printInstructions(int domainID, string topic);
 int receiving(int seconds, DDS::DomainParticipantFactory_var dpf, int domainID, string topicName);
 
 int main(int argc, char *argv[])
@@ -30,7 +30,8 @@ int main(int argc, char *argv[])
     DDS::DomainParticipantFactory_var dpf = TheParticipantFactoryWithArgs(argc, argv);
     int domainID = 42;
     string username = "Default";
-    string topicName = "Flamingo List";
+    string topicName = "Default";
+    int attempt;
 
     std::cout << "------------------------------------\n";
     std::cout << "|  ___ _            _                |\n";
@@ -44,7 +45,7 @@ int main(int argc, char *argv[])
 
     while (true)
     {
-        printInstructions(domainID, username, topicName);
+        printInstructions(domainID, topicName);
 
         char input;
 
@@ -53,31 +54,32 @@ int main(int argc, char *argv[])
         switch (input)
         {
         case 'r':
-            std::cout << "Set timeout time in seconds: ";
+            std::cout << "Set timeout time in seconds:";
             int seconds;
             std::cin >> seconds;
             std::cout << "\nWaiting...\n";
-            std::cout << "\n";
-            receiving(seconds, dpf, domainID, topicName);
-            break;
-        case 't':
+            attempt = receiving(seconds, dpf, domainID, topicName);
+            if (attempt == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                std::cout << "Receive attempt failed: Error code: " << attempt << std::endl;
+                return 1;
+            }
+        case 'd':
             std::cout << "Enter desired domain ID: ";
             std::cin >> domainID;
             std::cout << "\n";
             break;
-        case 'u':
-            std::cout << "Please set username: ";
-            std::cin >> username;
-            std::cout << "\nUsername set to " << username;
+        case 't':
+            std::cout << "Enter desired topic name:";
+            std::cin >> topicName;
             std::cout << "\n";
             break;
         case 'e':
             return 0;
-        case 'n':
-            std::cout << "Enter desired topic name: ";
-            std::cin >> topicName;
-            std::cout << "\n";
-            break;
         }
     }
 }
@@ -162,39 +164,33 @@ int receiving(int seconds, DDS::DomainParticipantFactory_var dpf, int domainID, 
         DDS::WaitSet_var ws = new DDS::WaitSet;
         ws->attach_condition(condition);
 
-        //while started here
-
-        DDS::SubscriptionMatchedStatus matches;
-        if (dr->get_subscription_matched_status(matches) != DDS::RETCODE_OK)
+        while (true)
         {
-            ACE_ERROR_RETURN((LM_ERROR,
-                              ACE_TEXT("ERROR: %N:%l: main() -")
-                                  ACE_TEXT(" get_subscription_matched_status failed!\n")),
-                             1);
-        }
-        /*
+            DDS::SubscriptionMatchedStatus matches;
+            if (dr->get_subscription_matched_status(matches) != DDS::RETCODE_OK)
+            {
+                ACE_ERROR_RETURN((LM_ERROR,
+                                  ACE_TEXT("ERROR: %N:%l: main() -")
+                                      ACE_TEXT(" get_subscription_matched_status failed!\n")),
+                                 1);
+            }
+
             if (matches.current_count == 0 && matches.total_count > 0)
             {
                 break;
-            }*/
+            }
 
-        DDS::ConditionSeq conditions;
-        DDS::Duration_t timeout = {seconds, 0};
-        if (ws->wait(conditions, timeout) != DDS::RETCODE_OK)
-        {
-            std::cout << "\nData could not be found at ";
-            std::cout << "DomainID: " << domainID;
-            std::cout << ", Topic name: " << topicName << "" << std::endl;
-            /*ACE_ERROR_RETURN((LM_ERROR,
+            DDS::ConditionSeq conditions;
+            DDS::Duration_t timeout = {seconds, 0};
+            if (ws->wait(conditions, timeout) != DDS::RETCODE_OK)
+            {
+                ACE_ERROR_RETURN((LM_ERROR,
                                   ACE_TEXT("ERROR: %N:%l: main() -")
                                       ACE_TEXT(" wait failed!\n")),
-                                 1);*/
-
-            return 1;
-            //break; //Serves our purpose, maybe a better way to implement this later? -Tavien
+                                 1);
+            }
         }
-
-        //ended here
+        ws->detach_condition(condition);
 
         // Clean-up!
         participant->delete_contained_entities();
@@ -210,17 +206,15 @@ int receiving(int seconds, DDS::DomainParticipantFactory_var dpf, int domainID, 
     return 0;
 }
 
-void printInstructions(int domainID, string username, string topic)
+void printInstructions(int domainID, string topic)
 {
     std::cout << "\n-------------------------.\n";
-    std::cout << "username: " << username << " | ";
-    std::cout << "dID: " << domainID;
+    std::cout << "domain ID: " << domainID;
     std::cout << " | ";
-    std::cout << "topic: " << topic;
+    std::cout << "topic name: " + topic;
     std::cout << "\n-------------------------.\n";
     std::cout << "r: Open to receive data.\n";
-    std::cout << "t: Set desired Domain ID.\n";
-    std::cout << "u: Set username.\n";
-    std::cout << "n: Set desired Topic.\n";
-    std::cout << "e: exit subscriber.\n";
+    std::cout << "d: Set desired Domain ID.\n";
+    std::cout << "t: Set desired Topic.\n";
+    std::cout << "e: Exit.\n";
 }
