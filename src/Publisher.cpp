@@ -22,6 +22,14 @@ int sending(int seconds, DDS::DomainParticipantFactory_var dpf, int domainID, st
 void printInstructions(int domainID, std::string username, std::string topic, std::string subject, int data);
 std::string getTime();
 int daysInCurrentMonth();
+//
+void cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFactory_var &dpf);
+int create_data_writer(DDS::Publisher_var &pub, DDS::Topic_var &topic, DDS::DataWriter_var &writer);
+int register_type_support(src::FlamingoTypeSupport_var fts, DDS::DomainParticipant_var &participant, CORBA::String_var &type_name);
+int create_publisher(DDS::Publisher_var &pub, DDS::DomainParticipant_var &participant);
+int create_participant(DDS::DomainParticipantFactory_var &dpf, int domainID, DDS::DomainParticipant_var &participant);
+int create_topic(DDS::DomainParticipant_var &participant, std::string topicName, CORBA::String_var type_name, DDS::Topic_var &topic);
+int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::FlamingoDataWriter_var &flamingo_writer, src::Flamingo flamingo);
 
 int main(int argc, char *argv[])
 {
@@ -43,7 +51,31 @@ int main(int argc, char *argv[])
     flamingo.subject = user_subject.c_str();
     flamingo.data = 0;
     flamingo.daysInCurrentMonth = daysInCurrentMonth();
+    ////////////////////////////////////////////////////
 
+    src::FlamingoTypeSupport_var fts = new src::FlamingoTypeSupportImpl();
+    CORBA::String_var type_name;
+
+    DDS::Topic_var topic;
+    DDS::DataWriter_var writer;
+    DDS::Publisher_var pub;
+
+    // Create domain participant
+    DDS::DomainParticipant_var participant;
+    create_participant(dpf, domainID, participant);
+
+    register_type_support(fts, participant, type_name);
+
+    // Create topic with participant and our topic variable
+    create_topic(participant, topicName, type_name, topic);
+
+    create_publisher(pub, participant);
+
+    create_data_writer(pub, topic, writer);
+
+    src::FlamingoDataWriter_var flamingo_writer = src::FlamingoDataWriter::_narrow(writer);
+
+    ////////////////////////////////////////////////////
     //Welcome Message
     std::cout << " " << std::endl;
     std::cout << "------------------------------------\n";
@@ -73,16 +105,15 @@ int main(int argc, char *argv[])
             int seconds;
             std::cin >> seconds;
             std::cout << "\nWaiting...\n";
-            attempt = sending(seconds, dpf, domainID, topicName, user_name, user_subject, num_of_messages, flamingo);
+            //attempt = sending(seconds, dpf, domainID, topicName, user_name, user_subject, num_of_messages, flamingo);
+            attempt = send(writer, seconds, num_of_messages, flamingo_writer, flamingo);
             if (attempt == 0)
             {
                 std::cout << "Message was successfully sent!\n";
-                return 0;
             }
             else
             {
                 std::cout << "Send attempt failed: Error code: " << attempt << std::endl;
-                return 1;
             }
             break;
         case 'd':
@@ -111,23 +142,142 @@ int main(int argc, char *argv[])
             break;
         }
     }
+}
 
-    /*
+void cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFactory_var &dpf)
+{
+    participant->delete_contained_entities();
+    dpf->delete_participant(participant);
 
-    //Prompt the user for a name and subject
-    std::cout << "Please enter a name for the sender: ";
-    std::cin >> user_name;
+    TheServiceParticipant->shutdown();
+}
 
-    std::cout << "Please enter the subject of the message: ";
-    std::cin >> user_subject;
-    std::cout << "\n";
+int create_data_writer(DDS::Publisher_var &pub, DDS::Topic_var &topic, DDS::DataWriter_var &writer)
+{
+    //Create the datawriter
+    writer = pub->create_datawriter(topic,
+                                    DATAWRITER_QOS_DEFAULT,
+                                    0, // No listener required
+                                    OpenDDS::DCPS::DEFAULT_STATUS_MASK);
 
-    std::cout << "How many messages do you want to send?: ";
-    std::cin >> num_of_messages;
-    std::cout << "\n";
-    //INITIALIZING THE PARTICIPANT
+    if (!writer)
+    {
+        std::cerr << "create_datawriter failed." << std::endl;
+    }
 
-    */
+    return 0;
+}
+
+int register_type_support(src::FlamingoTypeSupport_var fts, DDS::DomainParticipant_var &participant, CORBA::String_var &type_name)
+{
+    // REGISTERING THE DATA TYPE AND CREATING A TOPIC
+    // Trying to get my IDE to recognize the type support object type.
+    if (DDS::RETCODE_OK != fts->register_type(participant, ""))
+    {
+        std::cerr << "register_type failed." << std::endl;
+        return 1;
+    }
+    type_name = fts->get_type_name();
+
+    return 0;
+}
+
+int create_publisher(DDS::Publisher_var &pub, DDS::DomainParticipant_var &participant)
+{
+    // Create publisher from participant
+    pub = participant->create_publisher(PUBLISHER_QOS_DEFAULT,
+                                        0,
+                                        OpenDDS::DCPS::DEFAULT_STATUS_MASK);
+
+    if (!pub)
+    {
+        std::cerr << "create_publisher failed." << std::endl;
+        return 1;
+    }
+    return 0;
+}
+
+int create_participant(DDS::DomainParticipantFactory_var &dpf, int domainID, DDS::DomainParticipant_var &participant)
+{
+    participant = dpf->create_participant(domainID, //domain ID
+                                          PARTICIPANT_QOS_DEFAULT,
+                                          0, //No listener required
+                                          OpenDDS::DCPS::DEFAULT_STATUS_MASK);
+    if (!participant)
+    {
+        std::cerr << "create_participant failed." << std::endl;
+        return 1;
+    }
+    return 0;
+}
+
+int create_topic(DDS::DomainParticipant_var &participant, std::string topicName, CORBA::String_var type_name, DDS::Topic_var &topic)
+{
+    topic = participant->create_topic(topicName.c_str(),
+                                      type_name,
+                                      TOPIC_QOS_DEFAULT,
+                                      0, // No listener required
+                                      OpenDDS::DCPS::DEFAULT_STATUS_MASK);
+
+    if (!topic)
+    {
+        std::cerr << "create_topic failed." << std::endl;
+        return 1;
+    }
+    return 0;
+}
+
+int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::FlamingoDataWriter_var &flamingo_writer, src::Flamingo flamingo)
+{
+    //Block until Subscriber is available
+    DDS::StatusCondition_var condition = writer->get_statuscondition();
+    condition->set_enabled_statuses(DDS::PUBLICATION_MATCHED_STATUS);
+
+    DDS::WaitSet_var ws = new DDS::WaitSet;
+    ws->attach_condition(condition);
+
+    while (true)
+    {
+        DDS::PublicationMatchedStatus matches;
+        if (writer->get_publication_matched_status(matches) != DDS::RETCODE_OK)
+        {
+            std::cerr << "get_publication_matched_status failed!" << std::endl;
+            return 1;
+        }
+
+        if (matches.current_count >= 1)
+        {
+            break;
+        }
+
+        DDS::ConditionSeq conditions;
+        DDS::Duration_t timeout = {seconds, 0};
+        if (ws->wait(conditions, timeout) != DDS::RETCODE_OK)
+        {
+            std::cerr << "wait failed!" << std::endl;
+            return 1;
+        }
+    }
+
+    ws->detach_condition(condition);
+
+    //For more details about status, conditions, and wait sets, see Ch. 4.
+
+    // SAMPLE PUBLICATION
+
+    // Write samples
+
+    for (int i = 0; i < num_of_messages; i++)
+    {
+        DDS::ReturnCode_t error = flamingo_writer->write(flamingo, DDS::HANDLE_NIL);
+        flamingo.data++;
+        if (error != DDS::RETCODE_OK)
+        {
+            // Log or otherwise handle the error condition
+            return 1;
+        }
+    }
+    return 0;
 }
 
 int sending(int seconds, DDS::DomainParticipantFactory_var dpf, int domainID, std::string topicName, std::string user_name, std::string user_subject, int num_of_messages, src::Flamingo flamingo)
