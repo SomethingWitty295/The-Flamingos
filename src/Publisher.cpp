@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
     std::string topicName = "Default";
     int domainID = 42;
     int attempt;
+    int seconds = 10;
 
     src::Flamingo flamingo;
     flamingo.dateAndTime = getTime().c_str();
@@ -101,11 +102,12 @@ int main(int argc, char *argv[])
         switch (input)
         {
         case 's':
-            std::cout << "Set timeout time in seconds:";
-            int seconds;
-            std::cin >> seconds;
+            //std::cout << "Set timeout time in seconds:";
+            //int seconds;
+            //std::cin >> seconds;
             std::cout << "\nWaiting...\n";
             //attempt = sending(seconds, dpf, domainID, topicName, user_name, user_subject, num_of_messages, flamingo);
+            flamingo.dateAndTime = getTime().c_str();
             attempt = send(writer, seconds, num_of_messages, flamingo_writer, flamingo);
             if (attempt == 0)
             {
