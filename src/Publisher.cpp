@@ -117,11 +117,33 @@ int main(int argc, char *argv[])
             {
                 std::cout << "Send attempt failed: Error code: " << attempt << std::endl;
             }
+
             break;
         case 'd':
             std::cout << "Enter desired domain ID: ";
             std::cin >> domainID;
             std::cout << "\n";
+
+            //participant->delete_contained_entities();
+            //dpf->delete_participant(participant);
+
+            create_participant(dpf, domainID, participant);
+
+            register_type_support(fts, participant, type_name);
+
+            //participant->find_topic(topicName.c_str(), {seconds, 0});
+
+            // Create topic with participant and our topic variable
+            create_topic(participant, topicName, type_name, topic);
+
+            create_publisher(pub, participant);
+
+            create_data_writer(pub, topic, writer);
+
+            flamingo_writer = src::FlamingoDataWriter::_narrow(writer);
+
+            //writer->assert_liveliness();
+
             break;
         case 'u':
             std::cout << "Please set username: ";
@@ -130,6 +152,7 @@ int main(int argc, char *argv[])
             std::cout << "\n";
             break;
         case 'e':
+            cleanup(participant, dpf);
             return 0;
         case 't':
             std::cout << "Enter desired topic name:";
@@ -279,6 +302,7 @@ int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::Fla
             return 1;
         }
     }
+
     return 0;
 }
 

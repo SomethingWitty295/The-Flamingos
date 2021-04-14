@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
             std::cin >> seconds;
             std::cout << "\nWaiting...\n";
             //attempt = receiving(seconds, dpf, domainID, topicName);
-            attempt = receive(dr, seconds, participant);
+            //attempt = receive(dr, seconds, participant);
             if (attempt == 0)
             {
                 std::cout << "Attempt successful!\n";
@@ -114,11 +114,39 @@ int main(int argc, char *argv[])
                 std::cout << "Receiving ended.\n";
                 //return 1;
             }
+
             break;
         case 'd':
             std::cout << "Enter desired domain ID: ";
             std::cin >> domainID;
             std::cout << "\n";
+
+            //participant->delete_contained_entities();
+            //dpf->delete_participant(participant);
+
+            create_participant(participant, domainID, dpf);
+
+            register_type_support(participant, fts, type_name);
+
+            create_topic(participant, topicName, type_name, topic);
+
+            create_subscriber(sub, participant);
+
+            sub->get_default_datareader_qos(reader_qos);
+            reader_qos.reliability.kind = DDS::RELIABLE_RELIABILITY_QOS;
+
+            create_data_reader(sub, topic, reader_qos, listener, dr);
+
+            reader_i = src::FlamingoDataReader::_narrow(dr);
+
+            if (!reader_i)
+            {
+                ACE_ERROR_RETURN((LM_ERROR,
+                                  ACE_TEXT("ERROR: %N:%l: main() -")
+                                      ACE_TEXT(" _narrow failed!\n")),
+                                 1);
+            }
+
             break;
         case 't':
             std::cout << "Enter desired topic name:";
@@ -146,6 +174,7 @@ int create_participant(DDS::DomainParticipant_var &participant, int domainID, DD
                                           PARTICIPANT_QOS_DEFAULT,
                                           0, //No listener required
                                           OpenDDS::DCPS::DEFAULT_STATUS_MASK);
+
     if (!participant)
     {
         std::cerr << "create_participant failed." << std::endl;
