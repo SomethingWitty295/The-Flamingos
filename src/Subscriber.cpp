@@ -36,8 +36,12 @@ void cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFact
 
 int main(int argc, char *argv[])
 {
+    std::cout << "Enter Domain ID:";
+    int domainID;
+    std::cin >> domainID;
+
     DDS::DomainParticipantFactory_var dpf = TheParticipantFactoryWithArgs(argc, argv);
-    int domainID = 42;
+    //int domainID = 42;
     string username = "Default";
     string topicName = "Default";
     int attempt;
@@ -96,7 +100,7 @@ int main(int argc, char *argv[])
 
         switch (input)
         {
-        case 'r':
+        /*case 'r':
             std::cout << "Set timeout time in seconds:";
             int seconds;
             std::cin >> seconds;
@@ -115,14 +119,28 @@ int main(int argc, char *argv[])
                 //return 1;
             }
 
-            break;
+            break;*/
         case 'd':
             std::cout << "Enter desired domain ID: ";
             std::cin >> domainID;
             std::cout << "\n";
 
-            //participant->delete_contained_entities();
-            //dpf->delete_participant(participant);
+            /*participant = NULL;
+            topic = NULL;
+            sub = NULL;
+            dr->set_listener(0, OpenDDS::DCPS::DEFAULT_STATUS_MASK);
+            listener = new DataReaderListenerImpl;
+            dr->delete_contained_entities();
+            dr = NULL;*/
+
+            listener = new DataReaderListenerImpl;
+            dr->delete_contained_entities();
+            participant->delete_contained_entities();
+            dpf->delete_participant(participant);
+            participant = NULL;
+            topic = NULL;
+            sub = NULL;
+            dr = NULL;
 
             create_participant(participant, domainID, dpf);
 
@@ -418,7 +436,7 @@ void printInstructions(int domainID, string topic)
     std::cout << " | ";
     std::cout << "topic name: " + topic;
     std::cout << "\n-------------------------.\n";
-    std::cout << "r: Open to receive data.\n";
+    //std::cout << "r: Open to receive data.\n";
     std::cout << "d: Set desired Domain ID.\n";
     std::cout << "t: Set desired Topic.\n";
     std::cout << "e: Exit.\n";

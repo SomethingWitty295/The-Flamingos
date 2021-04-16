@@ -124,8 +124,12 @@ int main(int argc, char *argv[])
             std::cin >> domainID;
             std::cout << "\n";
 
-            //participant->delete_contained_entities();
-            //dpf->delete_participant(participant);
+            participant->delete_contained_entities();
+            dpf->delete_participant(participant);
+
+            participant = NULL;
+            topic = NULL;
+            pub = NULL;
 
             create_participant(dpf, domainID, participant);
 
