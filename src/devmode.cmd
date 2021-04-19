@@ -1,0 +1,1 @@
+set FLAMINGO_DEV=TRUE

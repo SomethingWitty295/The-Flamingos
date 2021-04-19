@@ -15,26 +15,32 @@
 
 #include <The-Flamingos/src/FlamingoTypeSupportImpl.h>
 
-//#include "MessengerTypeSupportImpl.h"
-
-//#include "MessageTypeSupportImpl.h"
-void printInstructions(int domainID, std::string username, std::string topic, std::string subject, int data);
+void printInstructions(int domainID, std::string username, std::string topic, std::string subject, int data, bool logging);
 std::string getTime();
 int daysInCurrentMonth();
 //
-void cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFactory_var &dpf);
-int create_data_writer(DDS::Publisher_var &pub, DDS::Topic_var &topic, DDS::DataWriter_var &writer);
-int register_type_support(src::FlamingoTypeSupport_var fts, DDS::DomainParticipant_var &participant, CORBA::String_var &type_name);
-int create_publisher(DDS::Publisher_var &pub, DDS::DomainParticipant_var &participant);
-int create_participant(DDS::DomainParticipantFactory_var &dpf, int domainID, DDS::DomainParticipant_var &participant);
-
-int create_topic(DDS::DomainParticipant_var &participant, std::string topicName, CORBA::String_var type_name, DDS::Topic_var &topic);
-int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::FlamingoDataWriter_var &flamingo_writer, src::Flamingo flamingo);
+void cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFactory_var &dpf, bool logging);
+int create_data_writer(DDS::Publisher_var &pub, DDS::Topic_var &topic, DDS::DataWriter_var &writer, bool logging);
+int register_type_support(src::FlamingoTypeSupport_var fts, DDS::DomainParticipant_var &participant, CORBA::String_var &type_name, bool logging);
+int create_publisher(DDS::Publisher_var &pub, DDS::DomainParticipant_var &participant, bool logging);
+int create_participant(DDS::DomainParticipantFactory_var &dpf, int domainID, DDS::DomainParticipant_var &participant, bool logging);
+int create_topic(DDS::DomainParticipant_var &participant, std::string topicName, CORBA::String_var type_name, DDS::Topic_var &topic, bool logging);
+int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::FlamingoDataWriter_var &flamingo_writer, src::Flamingo flamingo, bool logging);
 
 int main(int argc, char *argv[])
 {
+    bool logging;
+    if (getenv("FLAMINGO_DEV"))
+    {
+        logging = true;
+        std::cout << "\n////////////LAUNCHED IN DEVMODE////////////\n";
+    }
+    else
+    {
+        logging = false;
+    }
+
     int domainID = 42;
-    bool logging = false;
     std::string topicName = "Default";
 
     ////////////////////////////////////////////////////
@@ -81,11 +87,11 @@ int main(int argc, char *argv[])
 
     // Through multiple function calls that change the variable you give it,
     // we setup our domain participant.
-    create_participant(dpf, domainID, participant);
-    register_type_support(fts, participant, type_name);
-    create_topic(participant, topicName, type_name, topic);
-    create_publisher(pub, participant);
-    create_data_writer(pub, topic, writer);
+    create_participant(dpf, domainID, participant, logging);
+    register_type_support(fts, participant, type_name, logging);
+    create_topic(participant, topicName, type_name, topic, logging);
+    create_publisher(pub, participant, logging);
+    create_data_writer(pub, topic, writer, logging);
     src::FlamingoDataWriter_var flamingo_writer = src::FlamingoDataWriter::_narrow(writer);
 
     // Beginning of program execution loop
@@ -94,7 +100,7 @@ int main(int argc, char *argv[])
         flamingo.subject = user_subject.c_str();
         flamingo.name = user_name.c_str();
 
-        printInstructions(domainID, user_name, topicName, user_subject, flamingo.data);
+        printInstructions(domainID, user_name, topicName, user_subject, flamingo.data, logging);
 
         char input;
 
@@ -105,7 +111,7 @@ int main(int argc, char *argv[])
         case 's':
             std::cout << "\nWaiting...\n";
             flamingo.dateAndTime = getTime().c_str();
-            attempt = send(writer, seconds, num_of_messages, flamingo_writer, flamingo);
+            attempt = send(writer, seconds, num_of_messages, flamingo_writer, flamingo, logging);
             if (attempt == 0)
             {
                 std::cout << "Message was successfully sent!\n";
@@ -122,7 +128,7 @@ int main(int argc, char *argv[])
             std::cout << "\n";
             break;
         case 'e':
-            cleanup(participant, dpf);
+            cleanup(participant, dpf, logging);
             return 0;
         case 'c':
             std::cout << "Enter the Flamingo Subject:";
@@ -144,15 +150,28 @@ int main(int argc, char *argv[])
     }
 }
 
-void cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFactory_var &dpf)
+void cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFactory_var &dpf, bool logging)
 {
     participant->delete_contained_entities();
+    if (logging)
+    {
+        std::cerr << "LOG: All participant entities have been deleted.\n";
+    }
+
     dpf->delete_participant(participant);
+    if (logging)
+    {
+        std::cerr << "LOG: Participant has been deleted via the current DPF.\n";
+    }
 
     TheServiceParticipant->shutdown();
+    if (logging)
+    {
+        std::cerr << "LOG: DPF shutdown() is complete.\n";
+    }
 }
 
-int create_data_writer(DDS::Publisher_var &pub, DDS::Topic_var &topic, DDS::DataWriter_var &writer)
+int create_data_writer(DDS::Publisher_var &pub, DDS::Topic_var &topic, DDS::DataWriter_var &writer, bool logging)
 {
     //Create the datawriter
     writer = pub->create_datawriter(topic,
@@ -162,13 +181,21 @@ int create_data_writer(DDS::Publisher_var &pub, DDS::Topic_var &topic, DDS::Data
 
     if (!writer)
     {
-        std::cerr << "create_datawriter failed." << std::endl;
+        std::cerr << "create_datawriter: failed." << std::endl;
+        return 1;
+    }
+    else
+    {
+        if (logging)
+        {
+            std::cerr << "LOG: create_data_writer: datawriter has been set to writer variable. (&pub, &topic, &writer)\n";
+        }
     }
 
     return 0;
 }
 
-int register_type_support(src::FlamingoTypeSupport_var fts, DDS::DomainParticipant_var &participant, CORBA::String_var &type_name)
+int register_type_support(src::FlamingoTypeSupport_var fts, DDS::DomainParticipant_var &participant, CORBA::String_var &type_name, bool logging)
 {
     // REGISTERING THE DATA TYPE AND CREATING A TOPIC
     // Trying to get my IDE to recognize the type support object type.
@@ -177,12 +204,19 @@ int register_type_support(src::FlamingoTypeSupport_var fts, DDS::DomainParticipa
         std::cerr << "register_type failed." << std::endl;
         return 1;
     }
+    else
+    {
+        if (logging)
+        {
+            std::cerr << "LOG: register_type_support: FlamingoTypeSupport has correctly registered type with given participant.\n";
+        }
+    }
     type_name = fts->get_type_name();
 
     return 0;
 }
 
-int create_publisher(DDS::Publisher_var &pub, DDS::DomainParticipant_var &participant)
+int create_publisher(DDS::Publisher_var &pub, DDS::DomainParticipant_var &participant, bool logging)
 {
     // Create publisher from participant
     pub = participant->create_publisher(PUBLISHER_QOS_DEFAULT,
@@ -194,10 +228,17 @@ int create_publisher(DDS::Publisher_var &pub, DDS::DomainParticipant_var &partic
         std::cerr << "create_publisher failed." << std::endl;
         return 1;
     }
+    else
+    {
+        if (logging)
+        {
+            std::cerr << "LOG: create_publisher: publisher successfully created with current participant.";
+        }
+    }
     return 0;
 }
 
-int create_participant(DDS::DomainParticipantFactory_var &dpf, int domainID, DDS::DomainParticipant_var &participant)
+int create_participant(DDS::DomainParticipantFactory_var &dpf, int domainID, DDS::DomainParticipant_var &participant, bool logging)
 {
     participant = dpf->create_participant(domainID, //domain ID
                                           PARTICIPANT_QOS_DEFAULT,
@@ -208,10 +249,18 @@ int create_participant(DDS::DomainParticipantFactory_var &dpf, int domainID, DDS
         std::cerr << "create_participant failed." << std::endl;
         return 1;
     }
+    else
+    {
+        if (logging)
+        {
+            std::cerr << "LOG: create_participant: participant object successfully created within";
+            std::cerr << domainID << " domain.\n";
+        }
+    }
     return 0;
 }
 
-int create_topic(DDS::DomainParticipant_var &participant, std::string topicName, CORBA::String_var type_name, DDS::Topic_var &topic)
+int create_topic(DDS::DomainParticipant_var &participant, std::string topicName, CORBA::String_var type_name, DDS::Topic_var &topic, bool logging)
 {
     topic = participant->create_topic(topicName.c_str(),
                                       type_name,
@@ -221,13 +270,21 @@ int create_topic(DDS::DomainParticipant_var &participant, std::string topicName,
 
     if (!topic)
     {
-        std::cerr << "create_topic failed." << std::endl;
+        std::cerr << "create_topic: failed." << std::endl;
         return 1;
+    }
+    else
+    {
+        if (logging)
+        {
+            std::cerr << "LOG: create_topic: topic has been created with topicname ";
+            std::cerr << topicName << "\n";
+        }
     }
     return 0;
 }
 
-int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::FlamingoDataWriter_var &flamingo_writer, src::Flamingo flamingo)
+int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::FlamingoDataWriter_var &flamingo_writer, src::Flamingo flamingo, bool logging)
 {
     //Block until Subscriber is available
     DDS::StatusCondition_var condition = writer->get_statuscondition();
@@ -241,7 +298,10 @@ int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::Fla
         DDS::PublicationMatchedStatus matches;
         if (writer->get_publication_matched_status(matches) != DDS::RETCODE_OK)
         {
-            std::cerr << "get_publication_matched_status failed!" << std::endl;
+            if (logging)
+            {
+                std::cerr << "LOG: send: get_publication_matched_status failed!" << std::endl;
+            }
             return 1;
         }
 
@@ -255,6 +315,10 @@ int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::Fla
         if (ws->wait(conditions, timeout) != DDS::RETCODE_OK)
         {
             std::cerr << "wait failed!" << std::endl;
+            if (logging)
+            {
+                std::cerr << "LOG: send: ws->wait(conditions, timeout) != DDS::RETCODE_OK.\n";
+            }
             return 1;
         }
     }
@@ -272,15 +336,28 @@ int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::Fla
         if (error != DDS::RETCODE_OK)
         {
             // Log or otherwise handle the error condition
+            if (logging)
+            {
+                std::cerr << "LOG: send: flamingo has failed to send from pub side. (error != DDS::RETCODE_OK)\n";
+            }
             return 1;
         }
+    }
+
+    if (logging)
+    {
+        std::cerr << "LOG: send: flamingo has been successfully sent from publisher side.\n";
     }
 
     return 0;
 }
 
-void printInstructions(int domainID, std::string username, std::string topic, std::string subject, int data)
+void printInstructions(int domainID, std::string username, std::string topic, std::string subject, int data, bool logging)
 {
+    if (logging)
+    {
+        std::cout << "\n////////////DEV MODE////////////\n";
+    }
     std::cout << "\n-------------------------\n";
     std::cout << "username: " + username + " | ";
     std::cout << "dID: " << domainID;
@@ -292,8 +369,15 @@ void printInstructions(int domainID, std::string username, std::string topic, st
     std::cout << "s: Try to send your data.\n";
     std::cout << "u: Set username.\n";
     std::cout << "c: Change your Flamingo to send.\n";
-    std::cout << "l: Toggle logging.\n";
+    if (logging)
+    {
+        std::cout << "l: Toggle logging.\n";
+    }
     std::cout << "e: Exit.\n";
+    if (logging)
+    {
+        std::cout << "\n////////////DEV MODE////////////\n";
+    }
 }
 
 std::string getTime()

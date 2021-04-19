@@ -22,24 +22,32 @@
 #include <iostream>
 using namespace std;
 
-void printInstructions(int domainID, string topic);
+void printInstructions(int domainID, string topic, bool logging);
 //
 int create_data_reader(DDS::Subscriber_var &sub, DDS::Topic_var &topic, DDS::DataReaderQos &reader_qos,
-                       DDS::DataReaderListener_var &listener, DDS::DataReader_var &dr);
-int create_subscriber(DDS::Subscriber_var &sub, DDS::DomainParticipant_var &participant);
-int create_topic(DDS::DomainParticipant_var &participant, std::string &topicName, CORBA::String_var &type_name, DDS::Topic_var &topic);
-int register_type_support(DDS::DomainParticipant_var &participant, src::FlamingoTypeSupport_var &fts, CORBA::String_var &type_name);
-int create_participant(DDS::DomainParticipant_var &participant, int domainID, DDS::DomainParticipantFactory_var &dpf);
-void cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFactory_var &dpf);
+                       DDS::DataReaderListener_var &listener, DDS::DataReader_var &dr, bool logging);
+int create_subscriber(DDS::Subscriber_var &sub, DDS::DomainParticipant_var &participant, bool logging);
+int create_topic(DDS::DomainParticipant_var &participant, std::string &topicName, CORBA::String_var &type_name, DDS::Topic_var &topic, bool logging);
+int register_type_support(DDS::DomainParticipant_var &participant, src::FlamingoTypeSupport_var &fts, CORBA::String_var &type_name, bool logging);
+int create_participant(DDS::DomainParticipant_var &participant, int domainID, DDS::DomainParticipantFactory_var &dpf, bool logging);
+void cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFactory_var &dpf, bool logging);
 
 int main(int argc, char *argv[])
 {
-    int domainID;
-    bool logging = false;
+    bool logging;
+    if (getenv("FLAMINGO_DEV"))
+    {
+        logging = true;
+        std::cout << "\n////////////LAUNCHED IN DEVMODE////////////\n";
+    }
+    else
+    {
+        logging = false;
+    }
 
-    string username = "Default";
+    int domainID;
+
     string topicName = "Default";
-    ////
 
     std::cout << "------------------------------------\n";
     std::cout << "|  ___ _            _                |\n";
@@ -69,14 +77,14 @@ int main(int argc, char *argv[])
 
     // Through multiple function calls that change the variable you give it,
     // we setup our domain participant.
-    create_participant(participant, domainID, dpf);
-    register_type_support(participant, fts, type_name);
-    create_topic(participant, topicName, type_name, topic);
-    create_subscriber(sub, participant);
+    create_participant(participant, domainID, dpf, logging);
+    register_type_support(participant, fts, type_name, logging);
+    create_topic(participant, topicName, type_name, topic, logging);
+    create_subscriber(sub, participant, logging);
     DDS::DataReaderQos reader_qos;
     sub->get_default_datareader_qos(reader_qos);
     reader_qos.reliability.kind = DDS::RELIABLE_RELIABILITY_QOS;
-    create_data_reader(sub, topic, reader_qos, listener, dr);
+    create_data_reader(sub, topic, reader_qos, listener, dr, logging);
     src::FlamingoDataReader_var reader_i = src::FlamingoDataReader::_narrow(dr);
 
     if (!reader_i)
@@ -89,7 +97,7 @@ int main(int argc, char *argv[])
 
     while (true)
     {
-        printInstructions(domainID, topicName);
+        printInstructions(domainID, topicName, logging);
 
         char input;
 
@@ -98,7 +106,7 @@ int main(int argc, char *argv[])
         switch (input)
         {
         case 'e':
-            cleanup(participant, dpf);
+            cleanup(participant, dpf, logging);
             return 0;
         case 'l':
             if (!logging)
@@ -114,15 +122,28 @@ int main(int argc, char *argv[])
     }
 }
 
-void cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFactory_var &dpf)
+void cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFactory_var &dpf, bool logging)
 {
     participant->delete_contained_entities();
+    if (logging)
+    {
+        std::cout << "LOG: All participant entities have been deleted.\n";
+    }
+
     dpf->delete_participant(participant);
+    if (logging)
+    {
+        std::cout << "LOG: Participant has been deleted via the current DPF.\n";
+    }
 
     TheServiceParticipant->shutdown();
+    if (logging)
+    {
+        std::cout << "LOG: DPF shutdown() is complete.\n";
+    }
 }
 
-int create_participant(DDS::DomainParticipant_var &participant, int domainID, DDS::DomainParticipantFactory_var &dpf)
+int create_participant(DDS::DomainParticipant_var &participant, int domainID, DDS::DomainParticipantFactory_var &dpf, bool logging)
 {
     participant = dpf->create_participant(domainID, //domain ID
                                           PARTICIPANT_QOS_DEFAULT,
@@ -131,24 +152,39 @@ int create_participant(DDS::DomainParticipant_var &participant, int domainID, DD
 
     if (!participant)
     {
-        std::cerr << "create_participant failed." << std::endl;
+        std::cerr << "create_participant() failed." << std::endl;
         return 1;
+    }
+    else
+    {
+        if (logging)
+        {
+            std::cerr << "LOG: create_participant: participant object successfully created within";
+            std::cerr << domainID << " domain.\n";
+        }
     }
     return 0;
 }
 
-int register_type_support(DDS::DomainParticipant_var &participant, src::FlamingoTypeSupport_var &fts, CORBA::String_var &type_name)
+int register_type_support(DDS::DomainParticipant_var &participant, src::FlamingoTypeSupport_var &fts, CORBA::String_var &type_name, bool logging)
 {
     if (DDS::RETCODE_OK != fts->register_type(participant, ""))
     {
         std::cerr << "register_type failed." << std::endl;
         return 1;
     }
+    else
+    {
+        if (logging)
+        {
+            std::cerr << "LOG: register_type_support: FlamingoTypeSupport has correctly registered type with given participant.\n";
+        }
+    }
     type_name = fts->get_type_name();
     return 0;
 }
 
-int create_topic(DDS::DomainParticipant_var &participant, std::string &topicName, CORBA::String_var &type_name, DDS::Topic_var &topic)
+int create_topic(DDS::DomainParticipant_var &participant, std::string &topicName, CORBA::String_var &type_name, DDS::Topic_var &topic, bool logging)
 {
     topic = participant->create_topic(topicName.c_str(),
                                       type_name,
@@ -158,13 +194,21 @@ int create_topic(DDS::DomainParticipant_var &participant, std::string &topicName
 
     if (!topic)
     {
-        std::cerr << "create_topic failed." << std::endl;
+        std::cerr << "create_topic: failed." << std::endl;
         return 1;
+    }
+    else
+    {
+        if (logging)
+        {
+            std::cerr << "LOG: create_topic: topic has been created with topicname ";
+            std::cerr << topicName << ".\n";
+        }
     }
     return 0;
 }
 
-int create_subscriber(DDS::Subscriber_var &sub, DDS::DomainParticipant_var &participant)
+int create_subscriber(DDS::Subscriber_var &sub, DDS::DomainParticipant_var &participant, bool logging)
 {
     // Create the subscriber
     sub =
@@ -173,14 +217,21 @@ int create_subscriber(DDS::Subscriber_var &sub, DDS::DomainParticipant_var &part
                                        OpenDDS::DCPS::DEFAULT_STATUS_MASK);
     if (!sub)
     {
-        std::cerr << "Failed to create_subscriber." << std::endl;
+        std::cerr << "create_subscriber failed." << std::endl;
         return 1;
+    }
+    else
+    {
+        if (logging)
+        {
+            std::cerr << "LOG: create_subscriber: subscriber successfully created with current participant.";
+        }
     }
     return 0;
 }
 
 int create_data_reader(DDS::Subscriber_var &sub, DDS::Topic_var &topic, DDS::DataReaderQos &reader_qos,
-                       DDS::DataReaderListener_var &listener, DDS::DataReader_var &dr)
+                       DDS::DataReaderListener_var &listener, DDS::DataReader_var &dr, bool logging)
 {
     //Create the Datareader
     dr = sub->create_datareader(topic,
@@ -193,11 +244,22 @@ int create_data_reader(DDS::Subscriber_var &sub, DDS::Topic_var &topic, DDS::Dat
         std::cerr << "create_datareader failed." << std::endl;
         return 1;
     }
+    else
+    {
+        if (logging)
+        {
+            std::cerr << "LOG: create_data_reader: successfully created with topic.";
+        }
+    }
     return 0;
 }
 
-void printInstructions(int domainID, string topic)
+void printInstructions(int domainID, string topic, bool logging)
 {
+    if (logging)
+    {
+        std::cout << "\n////////////DEV MODE////////////\n";
+    }
     std::cout << "\n-------------------------.\n";
     std::cout << "domain ID: " << domainID;
     std::cout << " | ";
@@ -206,6 +268,13 @@ void printInstructions(int domainID, string topic)
     //std::cout << "r: Open to receive data.\n";
     //std::cout << "d: Set desired Domain ID.\n";
     //std::cout << "t: Set desired Topic.\n";
-    std::cout << "l: Toggle logging.\n";
+    if (logging)
+    {
+        std::cout << "l: Toggle logging.\n";
+    }
     std::cout << "e: Exit.\n";
+    if (logging)
+    {
+        std::cout << "\n////////////DEV MODE////////////\n";
+    }
 }
