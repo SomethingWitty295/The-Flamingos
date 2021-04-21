@@ -17,6 +17,7 @@ project(*publisher) : dcpsexe, dcps_tcp, dcps_rtps_udp {
   }
 
   Source_Files {
+    FlamingoWare.cpp
     Publisher.cpp
   }
 }
@@ -32,6 +33,7 @@ project(*subscriber) : dcpsexe, dcps_tcp, dcps_rtps_udp {
 
   Source_Files {
     DataReaderListenerImpl.cpp
+    FlamingoWare.cpp
     Subscriber.cpp
   }
 }

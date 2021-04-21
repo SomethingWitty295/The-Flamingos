@@ -18,20 +18,13 @@
 
 #include <The-Flamingos/src/FlamingoTypeSupportImpl.h>
 #include <The-Flamingos/src/DataReaderListenerImpl.h>
+//#include <The-Flamingos/src/SubFlock.h>
+#include "FlamingoWare.h"
 
 #include <iostream>
 using namespace std;
 
 void printInstructions(int domainID, string topic, bool logging);
-//
-int create_data_reader(DDS::Subscriber_var &sub, DDS::Topic_var &topic, DDS::DataReaderQos &reader_qos,
-                       DDS::DataReaderListener_var &listener, DDS::DataReader_var &dr, bool logging);
-int create_subscriber(DDS::Subscriber_var &sub, DDS::DomainParticipant_var &participant, bool logging);
-int create_topic(DDS::DomainParticipant_var &participant, std::string &topicName, CORBA::String_var &type_name, DDS::Topic_var &topic, bool logging);
-int register_type_support(DDS::DomainParticipant_var &participant, src::FlamingoTypeSupport_var &fts, CORBA::String_var &type_name, bool logging);
-int create_participant(DDS::DomainParticipant_var &participant, int domainID, DDS::DomainParticipantFactory_var &dpf, bool logging);
-void cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFactory_var &dpf, bool logging);
-
 int main(int argc, char *argv[])
 {
     bool logging;
@@ -61,6 +54,12 @@ int main(int argc, char *argv[])
     std::cout << "\nEnter desired topic name:";
     std::cin >> topicName;
 
+    /*
+    SubFlock flock;
+    flock.domainID = domainID;
+    flock.topicName = topicName;
+    int register_attempt = register_flock_as_sub(flock);*/
+
     // DDS initialization variables & other random variables
     DDS::DomainParticipantFactory_var dpf = TheParticipantFactoryWithArgs(argc, argv);
 
@@ -77,8 +76,8 @@ int main(int argc, char *argv[])
 
     // Through multiple function calls that change the variable you give it,
     // we setup our domain participant.
-    create_participant(participant, domainID, dpf, logging);
-    register_type_support(participant, fts, type_name, logging);
+    create_participant(dpf, domainID, participant, logging);
+    register_type_support(fts, participant, type_name, logging);
     create_topic(participant, topicName, type_name, topic, logging);
     create_subscriber(sub, participant, logging);
     DDS::DataReaderQos reader_qos;
@@ -121,6 +120,8 @@ int main(int argc, char *argv[])
         }
     }
 }
+
+/**
 
 void cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFactory_var &dpf, bool logging)
 {
@@ -253,7 +254,7 @@ int create_data_reader(DDS::Subscriber_var &sub, DDS::Topic_var &topic, DDS::Dat
     }
     return 0;
 }
-
+*/
 void printInstructions(int domainID, string topic, bool logging)
 {
     if (logging)

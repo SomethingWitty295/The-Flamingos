@@ -14,18 +14,23 @@
 #endif
 
 #include <The-Flamingos/src/FlamingoTypeSupportImpl.h>
-
+//#include <The-Flamingos/src/PubFlock.h>
+#include "FlamingoWare.h"
+/*
 void printInstructions(int domainID, std::string username, std::string topic, std::string subject, int data, bool logging);
 std::string getTime();
 int daysInCurrentMonth();
-//
 void cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFactory_var &dpf, bool logging);
 int create_data_writer(DDS::Publisher_var &pub, DDS::Topic_var &topic, DDS::DataWriter_var &writer, bool logging);
 int register_type_support(src::FlamingoTypeSupport_var fts, DDS::DomainParticipant_var &participant, CORBA::String_var &type_name, bool logging);
 int create_publisher(DDS::Publisher_var &pub, DDS::DomainParticipant_var &participant, bool logging);
 int create_participant(DDS::DomainParticipantFactory_var &dpf, int domainID, DDS::DomainParticipant_var &participant, bool logging);
-int create_topic(DDS::DomainParticipant_var &participant, std::string topicName, CORBA::String_var type_name, DDS::Topic_var &topic, bool logging);
+//int create_topic(DDS::DomainParticipant_var &participant, std::string topicName, CORBA::String_var type_name, DDS::Topic_var &topic, bool logging);
 int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::FlamingoDataWriter_var &flamingo_writer, src::Flamingo flamingo, bool logging);
+**/
+int daysInCurrentMonth();
+std::string getTime();
+void printInstructions(int domainID, std::string username, std::string topic, std::string subject, int data, bool logging);
 
 int main(int argc, char *argv[])
 {
@@ -43,9 +48,9 @@ int main(int argc, char *argv[])
     int domainID = 42;
     std::string topicName = "Default";
 
-    ////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////
     //Welcome Message (& asking user for dID and topicName)
-    ////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////
     std::cout << " " << std::endl;
     std::cout << "------------------------------------\n";
     std::cout << "|  ___ _            _                |\n";
@@ -59,6 +64,11 @@ int main(int argc, char *argv[])
     std::cin >> domainID;
     std::cout << "\nEnter desired topic name:";
     std::cin >> topicName;
+
+    /*
+    PubFlock flock;
+    flock.domainID = domainID;
+    flock.topicName = topicName;*/
 
     // DDS initialization variables & other random variables
     DDS::DomainParticipantFactory_var dpf = TheParticipantFactoryWithArgs(argc, argv);
@@ -74,6 +84,8 @@ int main(int argc, char *argv[])
     flamingo.subject = user_subject.c_str();
     flamingo.data = 0;
     flamingo.daysInCurrentMonth = daysInCurrentMonth();
+
+    //int register_attempt = register_flock_as_pub(flock);
 
     // These are never changed, so establish them here.
     src::FlamingoTypeSupport_var fts = new src::FlamingoTypeSupportImpl();
@@ -112,6 +124,8 @@ int main(int argc, char *argv[])
             std::cout << "\nWaiting...\n";
             flamingo.dateAndTime = getTime().c_str();
             attempt = send(writer, seconds, num_of_messages, flamingo_writer, flamingo, logging);
+            //attempt = send(flock);]
+            //attempt = send(flock);
             if (attempt == 0)
             {
                 std::cout << "Message was successfully sent!\n";
@@ -128,7 +142,7 @@ int main(int argc, char *argv[])
             std::cout << "\n";
             break;
         case 'e':
-            cleanup(participant, dpf, logging);
+            //cleanup(flock);
             return 0;
         case 'c':
             std::cout << "Enter the Flamingo Subject:";
@@ -149,6 +163,7 @@ int main(int argc, char *argv[])
         }
     }
 }
+/**
 
 void cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFactory_var &dpf, bool logging)
 {
@@ -351,7 +366,7 @@ int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::Fla
 
     return 0;
 }
-
+*/
 void printInstructions(int domainID, std::string username, std::string topic, std::string subject, int data, bool logging)
 {
     if (logging)
