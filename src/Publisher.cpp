@@ -14,7 +14,7 @@
 #endif
 
 #include <The-Flamingos/src/FlamingoTypeSupportImpl.h>
-//#include <The-Flamingos/src/PubFlock.h>
+#include <The-Flamingos/src/PubFlock.h>
 #include "FlamingoWare.h"
 /*
 void printInstructions(int domainID, std::string username, std::string topic, std::string subject, int data, bool logging);
@@ -92,11 +92,26 @@ int main(int argc, char *argv[])
     CORBA::String_var type_name;
 
     // All our various DDS variables for participant, etc.
+
     DDS::Topic_var topic;
     DDS::DataWriter_var writer;
     DDS::Publisher_var pub;
     DDS::DomainParticipant_var participant;
+    src::FlamingoDataWriter_var flamingo_writer;
 
+    PubFlock flock;
+    flock.topic = topic;
+    flock.writer = writer;
+    flock.pub = pub;
+    flock.participant = participant;
+    flock.flamingo_writer = flamingo_writer;
+    flock.type_name = type_name;
+    flock.domainID = domainID;
+    flock.topicName = topicName;
+    flock.flamingo = flamingo;
+    flock.dpf = dpf;
+
+    /**
     // Through multiple function calls that change the variable you give it,
     // we setup our domain participant.
     create_participant(dpf, domainID, participant, logging);
@@ -105,6 +120,11 @@ int main(int argc, char *argv[])
     create_publisher(pub, participant, logging);
     create_data_writer(pub, topic, writer, logging);
     src::FlamingoDataWriter_var flamingo_writer = src::FlamingoDataWriter::_narrow(writer);
+    */
+    /*
+    registerPub(dpf, participant, domainID, logging, fts, type_name, topicName, topic,
+                pub, writer, flamingo_writer);*/
+    registerPubFlock(flock);
 
     // Beginning of program execution loop
     while (true)
@@ -123,7 +143,7 @@ int main(int argc, char *argv[])
         case 's':
             std::cout << "\nWaiting...\n";
             flamingo.dateAndTime = getTime().c_str();
-            attempt = send(writer, seconds, num_of_messages, flamingo_writer, flamingo, logging);
+            attempt = send(flock.writer, seconds, num_of_messages, flock.flamingo_writer, flamingo, logging);
             //attempt = send(flock);]
             //attempt = send(flock);
             if (attempt == 0)

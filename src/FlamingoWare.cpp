@@ -15,7 +15,7 @@
 
 #include <The-Flamingos/src/FlamingoTypeSupportImpl.h>
 //#include <The-Flamingos/src/SubFlock.h>
-//#include <The-Flamingos/src/PubFlock.h>
+#include <The-Flamingos/src/PubFlock.h>
 #include "FlamingoWare.h"
 
 src::FlamingoTypeSupport_var fts = new src::FlamingoTypeSupportImpl();
@@ -128,6 +128,25 @@ void cleanup(PubFlock flock)
     cleanup(flock.participant, flock.dpf, logging);
 }
 */
+
+void registerPubFlock(PubFlock &flock)
+{
+    registerPub(flock.dpf, flock.participant, flock.domainID, logging, fts, flock.type_name,
+                flock.topicName, flock.topic, flock.pub, flock.writer, flock.flamingo_writer);
+}
+
+void registerPub(DDS::DomainParticipantFactory_var &dpf, DDS::DomainParticipant_var &participant,
+                 int &domainID, bool &logging, src::FlamingoTypeSupport_var &fts, CORBA::String_var &type_name,
+                 std::string &topicName, DDS::Topic_var &topic, DDS::Publisher_var &pub, DDS::DataWriter_var &writer,
+                 src::FlamingoDataWriter_var &flamingo_writer)
+{
+    create_participant(dpf, domainID, participant, logging);
+    register_type_support(fts, participant, type_name, logging);
+    create_topic(participant, topicName, type_name, topic, logging);
+    create_publisher(pub, participant, logging);
+    create_data_writer(pub, topic, writer, logging);
+    flamingo_writer = src::FlamingoDataWriter::_narrow(writer);
+}
 
 ////////////////////////////////////////////////////////////////////////////
 /** Section 1: All generic OpenDDS functions used by BOTH Pub & Sub. */
