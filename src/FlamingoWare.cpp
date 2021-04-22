@@ -14,13 +14,13 @@
 #endif
 
 #include <The-Flamingos/src/FlamingoTypeSupportImpl.h>
-//#include <The-Flamingos/src/SubFlock.h>
+#include <The-Flamingos/src/SubFlock.h>
 #include <The-Flamingos/src/PubFlock.h>
 #include "FlamingoWare.h"
 
 src::FlamingoTypeSupport_var fts = new src::FlamingoTypeSupportImpl();
 
-bool logging = true;
+bool logging;
 
 ////////////////////////////////////////////////////////////////////////////
 /** Section 0: Broad */
@@ -136,7 +136,7 @@ void registerPubFlock(PubFlock &flock)
 }
 
 void registerPub(DDS::DomainParticipantFactory_var &dpf, DDS::DomainParticipant_var &participant,
-                 int &domainID, bool &logging, src::FlamingoTypeSupport_var &fts, CORBA::String_var &type_name,
+                 int &domainID, bool logging, src::FlamingoTypeSupport_var &fts, CORBA::String_var &type_name,
                  std::string &topicName, DDS::Topic_var &topic, DDS::Publisher_var &pub, DDS::DataWriter_var &writer,
                  src::FlamingoDataWriter_var &flamingo_writer)
 {
@@ -146,6 +146,28 @@ void registerPub(DDS::DomainParticipantFactory_var &dpf, DDS::DomainParticipant_
     create_publisher(pub, participant, logging);
     create_data_writer(pub, topic, writer, logging);
     flamingo_writer = src::FlamingoDataWriter::_narrow(writer);
+}
+
+void registerSubFlock(SubFlock &flock)
+{
+    registerSub(flock.dpf, flock.participant, flock.domainID, logging, flock.type_name, flock.topicName,
+                flock.topic, flock.sub, flock.reader_i, flock.listener, flock.dr);
+}
+
+void registerSub(DDS::DomainParticipantFactory_var &dpf, DDS::DomainParticipant_var &participant,
+                 int &domainID, bool logging, CORBA::String_var &type_name, std::string &topicName, DDS::Topic_var &topic,
+                 DDS::Subscriber_var &sub, src::FlamingoDataReader_var &reader_i, DDS::DataReaderListener_var &listener,
+                 DDS::DataReader_var &dr)
+{
+    create_participant(dpf, domainID, participant, logging);
+    register_type_support(fts, participant, type_name, logging);
+    create_topic(participant, topicName, type_name, topic, logging);
+    create_subscriber(sub, participant, logging);
+    DDS::DataReaderQos reader_qos;
+    sub->get_default_datareader_qos(reader_qos);
+    reader_qos.reliability.kind = DDS::RELIABLE_RELIABILITY_QOS;
+    create_data_reader(sub, topic, reader_qos, listener, dr, logging);
+    reader_i = src::FlamingoDataReader::_narrow(dr);
 }
 
 ////////////////////////////////////////////////////////////////////////////

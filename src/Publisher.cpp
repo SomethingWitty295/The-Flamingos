@@ -111,19 +111,6 @@ int main(int argc, char *argv[])
     flock.flamingo = flamingo;
     flock.dpf = dpf;
 
-    /**
-    // Through multiple function calls that change the variable you give it,
-    // we setup our domain participant.
-    create_participant(dpf, domainID, participant, logging);
-    register_type_support(fts, participant, type_name, logging);
-    create_topic(participant, topicName, type_name, topic, logging);
-    create_publisher(pub, participant, logging);
-    create_data_writer(pub, topic, writer, logging);
-    src::FlamingoDataWriter_var flamingo_writer = src::FlamingoDataWriter::_narrow(writer);
-    */
-    /*
-    registerPub(dpf, participant, domainID, logging, fts, type_name, topicName, topic,
-                pub, writer, flamingo_writer);*/
     registerPubFlock(flock);
 
     // Beginning of program execution loop
@@ -144,8 +131,6 @@ int main(int argc, char *argv[])
             std::cout << "\nWaiting...\n";
             flamingo.dateAndTime = getTime().c_str();
             attempt = send(flock.writer, seconds, num_of_messages, flock.flamingo_writer, flamingo, logging);
-            //attempt = send(flock);]
-            //attempt = send(flock);
             if (attempt == 0)
             {
                 std::cout << "Message was successfully sent!\n";
@@ -162,7 +147,7 @@ int main(int argc, char *argv[])
             std::cout << "\n";
             break;
         case 'e':
-            //cleanup(flock);
+            cleanup(flock.participant, flock.dpf, logging);
             return 0;
         case 'c':
             std::cout << "Enter the Flamingo Subject:";

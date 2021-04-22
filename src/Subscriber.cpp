@@ -18,7 +18,7 @@
 
 #include <The-Flamingos/src/FlamingoTypeSupportImpl.h>
 #include <The-Flamingos/src/DataReaderListenerImpl.h>
-//#include <The-Flamingos/src/SubFlock.h>
+#include <The-Flamingos/src/SubFlock.h>
 #include "FlamingoWare.h"
 
 #include <iostream>
@@ -76,6 +76,7 @@ int main(int argc, char *argv[])
 
     // Through multiple function calls that change the variable you give it,
     // we setup our domain participant.
+    /*
     create_participant(dpf, domainID, participant, logging);
     register_type_support(fts, participant, type_name, logging);
     create_topic(participant, topicName, type_name, topic, logging);
@@ -93,6 +94,19 @@ int main(int argc, char *argv[])
                               ACE_TEXT(" _narrow failed!\n")),
                          1);
     }
+    */
+    SubFlock flock;
+    flock.topic = topic;
+    flock.sub = sub;
+    flock.participant = participant;
+    flock.type_name = type_name;
+    flock.domainID = domainID;
+    flock.topicName = topicName;
+    flock.dpf = dpf;
+    flock.listener = listener;
+    flock.dr = dr;
+
+    registerSubFlock(flock);
 
     while (true)
     {
@@ -105,7 +119,7 @@ int main(int argc, char *argv[])
         switch (input)
         {
         case 'e':
-            cleanup(participant, dpf, logging);
+            cleanup(flock.participant, flock.dpf, logging);
             return 0;
         case 'l':
             if (!logging)
