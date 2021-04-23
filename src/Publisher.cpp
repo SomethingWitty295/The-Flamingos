@@ -16,18 +16,7 @@
 #include <The-Flamingos/src/FlamingoTypeSupportImpl.h>
 #include <The-Flamingos/src/PubFlock.h>
 #include "FlamingoWare.h"
-/*
-void printInstructions(int domainID, std::string username, std::string topic, std::string subject, int data, bool logging);
-std::string getTime();
-int daysInCurrentMonth();
-void cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFactory_var &dpf, bool logging);
-int create_data_writer(DDS::Publisher_var &pub, DDS::Topic_var &topic, DDS::DataWriter_var &writer, bool logging);
-int register_type_support(src::FlamingoTypeSupport_var fts, DDS::DomainParticipant_var &participant, CORBA::String_var &type_name, bool logging);
-int create_publisher(DDS::Publisher_var &pub, DDS::DomainParticipant_var &participant, bool logging);
-int create_participant(DDS::DomainParticipantFactory_var &dpf, int domainID, DDS::DomainParticipant_var &participant, bool logging);
-//int create_topic(DDS::DomainParticipant_var &participant, std::string topicName, CORBA::String_var type_name, DDS::Topic_var &topic, bool logging);
-int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::FlamingoDataWriter_var &flamingo_writer, src::Flamingo flamingo, bool logging);
-**/
+
 int daysInCurrentMonth();
 std::string getTime();
 void printInstructions(int domainID, std::string username, std::string topic, std::string subject, int data, bool logging);
@@ -44,6 +33,7 @@ int main(int argc, char *argv[])
     {
         logging = false;
     }
+    setLogging(logging);
 
     int domainID = 42;
     std::string topicName = "Default";
@@ -147,7 +137,8 @@ int main(int argc, char *argv[])
             std::cout << "\n";
             break;
         case 'e':
-            cleanup(flock.participant, flock.dpf, logging);
+            //cleanup(flock.participant, flock.dpf, logging);
+            cleanupPubFlock(flock);
             return 0;
         case 'c':
             std::cout << "Enter the Flamingo Subject:";
@@ -155,223 +146,11 @@ int main(int argc, char *argv[])
             std::cout << "\nEnter Flamingo generic integer:";
             std::cin >> flamingo.data;
             break;
-        case 'l':
-            if (!logging)
-            {
-                std::cout << "Logging enabled.\n";
-            }
-            else
-            {
-                std::cout << "Logging disabled.\n";
-            }
-            logging = !logging;
-        }
-    }
-}
-/**
-
-void cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFactory_var &dpf, bool logging)
-{
-    participant->delete_contained_entities();
-    if (logging)
-    {
-        std::cerr << "LOG: All participant entities have been deleted.\n";
-    }
-
-    dpf->delete_participant(participant);
-    if (logging)
-    {
-        std::cerr << "LOG: Participant has been deleted via the current DPF.\n";
-    }
-
-    TheServiceParticipant->shutdown();
-    if (logging)
-    {
-        std::cerr << "LOG: DPF shutdown() is complete.\n";
-    }
-}
-
-int create_data_writer(DDS::Publisher_var &pub, DDS::Topic_var &topic, DDS::DataWriter_var &writer, bool logging)
-{
-    //Create the datawriter
-    writer = pub->create_datawriter(topic,
-                                    DATAWRITER_QOS_DEFAULT,
-                                    0, // No listener required
-                                    OpenDDS::DCPS::DEFAULT_STATUS_MASK);
-
-    if (!writer)
-    {
-        std::cerr << "create_datawriter: failed." << std::endl;
-        return 1;
-    }
-    else
-    {
-        if (logging)
-        {
-            std::cerr << "LOG: create_data_writer: datawriter has been set to writer variable. (&pub, &topic, &writer)\n";
-        }
-    }
-
-    return 0;
-}
-
-int register_type_support(src::FlamingoTypeSupport_var fts, DDS::DomainParticipant_var &participant, CORBA::String_var &type_name, bool logging)
-{
-    // REGISTERING THE DATA TYPE AND CREATING A TOPIC
-    // Trying to get my IDE to recognize the type support object type.
-    if (DDS::RETCODE_OK != fts->register_type(participant, ""))
-    {
-        std::cerr << "register_type failed." << std::endl;
-        return 1;
-    }
-    else
-    {
-        if (logging)
-        {
-            std::cerr << "LOG: register_type_support: FlamingoTypeSupport has correctly registered type with given participant.\n";
-        }
-    }
-    type_name = fts->get_type_name();
-
-    return 0;
-}
-
-int create_publisher(DDS::Publisher_var &pub, DDS::DomainParticipant_var &participant, bool logging)
-{
-    // Create publisher from participant
-    pub = participant->create_publisher(PUBLISHER_QOS_DEFAULT,
-                                        0,
-                                        OpenDDS::DCPS::DEFAULT_STATUS_MASK);
-
-    if (!pub)
-    {
-        std::cerr << "create_publisher failed." << std::endl;
-        return 1;
-    }
-    else
-    {
-        if (logging)
-        {
-            std::cerr << "LOG: create_publisher: publisher successfully created with current participant.";
         }
     }
     return 0;
 }
 
-int create_participant(DDS::DomainParticipantFactory_var &dpf, int domainID, DDS::DomainParticipant_var &participant, bool logging)
-{
-    participant = dpf->create_participant(domainID, //domain ID
-                                          PARTICIPANT_QOS_DEFAULT,
-                                          0, //No listener required
-                                          OpenDDS::DCPS::DEFAULT_STATUS_MASK);
-    if (!participant)
-    {
-        std::cerr << "create_participant failed." << std::endl;
-        return 1;
-    }
-    else
-    {
-        if (logging)
-        {
-            std::cerr << "LOG: create_participant: participant object successfully created within";
-            std::cerr << domainID << " domain.\n";
-        }
-    }
-    return 0;
-}
-
-int create_topic(DDS::DomainParticipant_var &participant, std::string topicName, CORBA::String_var type_name, DDS::Topic_var &topic, bool logging)
-{
-    topic = participant->create_topic(topicName.c_str(),
-                                      type_name,
-                                      TOPIC_QOS_DEFAULT,
-                                      0, // No listener required
-                                      OpenDDS::DCPS::DEFAULT_STATUS_MASK);
-
-    if (!topic)
-    {
-        std::cerr << "create_topic: failed." << std::endl;
-        return 1;
-    }
-    else
-    {
-        if (logging)
-        {
-            std::cerr << "LOG: create_topic: topic has been created with topicname ";
-            std::cerr << topicName << "\n";
-        }
-    }
-    return 0;
-}
-
-int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::FlamingoDataWriter_var &flamingo_writer, src::Flamingo flamingo, bool logging)
-{
-    //Block until Subscriber is available
-    DDS::StatusCondition_var condition = writer->get_statuscondition();
-    condition->set_enabled_statuses(DDS::PUBLICATION_MATCHED_STATUS);
-
-    DDS::WaitSet_var ws = new DDS::WaitSet;
-    ws->attach_condition(condition);
-
-    while (true)
-    {
-        DDS::PublicationMatchedStatus matches;
-        if (writer->get_publication_matched_status(matches) != DDS::RETCODE_OK)
-        {
-            if (logging)
-            {
-                std::cerr << "LOG: send: get_publication_matched_status failed!" << std::endl;
-            }
-            return 1;
-        }
-
-        if (matches.current_count >= 1)
-        {
-            break;
-        }
-
-        DDS::ConditionSeq conditions;
-        DDS::Duration_t timeout = {seconds, 0};
-        if (ws->wait(conditions, timeout) != DDS::RETCODE_OK)
-        {
-            std::cerr << "wait failed!" << std::endl;
-            if (logging)
-            {
-                std::cerr << "LOG: send: ws->wait(conditions, timeout) != DDS::RETCODE_OK.\n";
-            }
-            return 1;
-        }
-    }
-
-    ws->detach_condition(condition);
-
-    //For more details about status, conditions, and wait sets, see Ch. 4.
-    // SAMPLE PUBLICATION
-    // Write samples
-
-    for (int i = 0; i < num_of_messages; i++)
-    {
-        DDS::ReturnCode_t error = flamingo_writer->write(flamingo, DDS::HANDLE_NIL);
-        flamingo.data++;
-        if (error != DDS::RETCODE_OK)
-        {
-            // Log or otherwise handle the error condition
-            if (logging)
-            {
-                std::cerr << "LOG: send: flamingo has failed to send from pub side. (error != DDS::RETCODE_OK)\n";
-            }
-            return 1;
-        }
-    }
-
-    if (logging)
-    {
-        std::cerr << "LOG: send: flamingo has been successfully sent from publisher side.\n";
-    }
-
-    return 0;
-}
-*/
 void printInstructions(int domainID, std::string username, std::string topic, std::string subject, int data, bool logging)
 {
     if (logging)
@@ -444,5 +223,7 @@ int daysInCurrentMonth()
         return 30;
     case 12:
         return 31;
+    default:
+        return -1;
     }
 }

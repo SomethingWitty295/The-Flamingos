@@ -21,11 +21,13 @@ struct SubFlock
     DDS::DomainParticipantFactory_var dpf;
     DDS::DomainParticipant_var participant;
     DDS::Topic_var topic;
-    DDS::Subscriber_var sub;
     CORBA::String_var type_name;
+    int domainID;
+    std::string topicName;
+
+    // Subscriber Specific
+    DDS::Subscriber_var sub;
     src::FlamingoDataReader_var reader_i;
     DDS::DataReaderListener_var listener;
     DDS::DataReader_var dr;
-    int domainID;
-    std::string topicName;
 };

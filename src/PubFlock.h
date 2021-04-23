@@ -21,11 +21,13 @@ struct PubFlock
     DDS::DomainParticipantFactory_var dpf;
     DDS::DomainParticipant_var participant;
     DDS::Topic_var topic;
-    DDS::Publisher_var pub;
     CORBA::String_var type_name;
-    DDS::DataWriter_var writer;
-    src::FlamingoDataWriter_var flamingo_writer;
     int domainID;
     std::string topicName;
+
+    // Publisher Specific
+    DDS::Publisher_var pub;
+    DDS::DataWriter_var writer;
+    src::FlamingoDataWriter_var flamingo_writer;
     src::Flamingo flamingo;
 };

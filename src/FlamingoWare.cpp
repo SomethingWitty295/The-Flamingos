@@ -22,152 +22,35 @@ src::FlamingoTypeSupport_var fts = new src::FlamingoTypeSupportImpl();
 
 bool logging;
 
+void setLogging(bool setting)
+{
+    logging = setting;
+}
+
 ////////////////////////////////////////////////////////////////////////////
-/** Section 0: Broad */
+/** Section 0: Flock Functions */
 ////////////////////////////////////////////////////////////////////////////
-
-/**
-int register_flock_as_sub(SubFlock &flock)
-{
-    create_participant(flock.dpf, flock.domainID, flock.participant, logging);
-    register_type_support(fts, flock.participant, flock.type_name, logging);
-    create_topic(flock.participant, flock.topicName, flock.type_name, flock.topic, logging);
-    create_subscriber(flock.sub, flock.participant, logging);
-    DDS::DataReaderQos reader_qos;
-    flock.sub->get_default_datareader_qos(reader_qos);
-    reader_qos.reliability.kind = DDS::RELIABLE_RELIABILITY_QOS;
-    create_data_reader(flock.sub, flock.topic, reader_qos, flock.listener, flock.dr, logging);
-    flock.reader_i = src::FlamingoDataReader::_narrow(flock.reader_i);
-}
-
-int register_flock_as_pub(PubFlock &flock)
-{
-    create_participant(flock.dpf, flock.domainID, flock.participant, logging);
-    register_type_support(fts, flock.participant, flock.type_name, logging);
-    create_topic(flock.participant, flock.topicName, flock.type_name, flock.topic, logging);
-    create_publisher(flock.pub, flock.participant, logging);
-    create_data_writer(flock.pub, flock.topic, flock.writer, logging);
-    flock.flamingo_writer = src::FlamingoDataWriter::_narrow(flock.writer);
-}
-
-int send(PubFlock flock)
-{
-    //Block until Subscriber is available
-    DDS::StatusCondition_var condition = flock.writer->get_statuscondition();
-    condition->set_enabled_statuses(DDS::PUBLICATION_MATCHED_STATUS);
-
-    DDS::WaitSet_var ws = new DDS::WaitSet;
-    ws->attach_condition(condition);
-
-    while (true)
-    {
-        DDS::PublicationMatchedStatus matches;
-        if (flock.writer->get_publication_matched_status(matches) != DDS::RETCODE_OK)
-        {
-            if (logging)
-            {
-                std::cerr << "LOG: send: get_publication_matched_status failed!" << std::endl;
-            }
-            return 1;
-        }
-
-        if (matches.current_count >= 1)
-        {
-            break;
-        }
-
-        DDS::ConditionSeq conditions;
-        DDS::Duration_t timeout = {10, 0};
-        if (ws->wait(conditions, timeout) != DDS::RETCODE_OK)
-        {
-            std::cerr << "wait failed!" << std::endl;
-            if (logging)
-            {
-                std::cerr << "LOG: send: ws->wait(conditions, timeout) != DDS::RETCODE_OK.\n";
-            }
-            return 1;
-        }
-    }
-
-    ws->detach_condition(condition);
-
-    //For more details about status, conditions, and wait sets, see Ch. 4.
-    // SAMPLE PUBLICATION
-    // Write samples
-
-    for (int i = 0; i < 1; i++)
-    {
-        DDS::ReturnCode_t error = flock.flamingo_writer->write(flock.flamingo, DDS::HANDLE_NIL);
-        //flamingo.data++;
-        if (error != DDS::RETCODE_OK)
-        {
-            // Log or otherwise handle the error condition
-            if (logging)
-            {
-                std::cerr << "LOG: send: flamingo has failed to send from pub side. (error != DDS::RETCODE_OK)\n";
-            }
-            return 1;
-        }
-    }
-
-    if (logging)
-    {
-        std::cerr << "LOG: send: flamingo has been successfully sent from publisher side.\n";
-    }
-
-    return 0;
-}
-
-void cleanup(SubFlock flock)
-{
-    cleanup(flock.participant, flock.dpf, logging);
-}
-
-void cleanup(PubFlock flock)
-{
-    cleanup(flock.participant, flock.dpf, logging);
-}
-*/
 
 void registerPubFlock(PubFlock &flock)
 {
-    registerPub(flock.dpf, flock.participant, flock.domainID, logging, fts, flock.type_name,
+    registerPub(flock.dpf, flock.participant, flock.domainID, flock.type_name,
                 flock.topicName, flock.topic, flock.pub, flock.writer, flock.flamingo_writer);
-}
-
-void registerPub(DDS::DomainParticipantFactory_var &dpf, DDS::DomainParticipant_var &participant,
-                 int &domainID, bool logging, src::FlamingoTypeSupport_var &fts, CORBA::String_var &type_name,
-                 std::string &topicName, DDS::Topic_var &topic, DDS::Publisher_var &pub, DDS::DataWriter_var &writer,
-                 src::FlamingoDataWriter_var &flamingo_writer)
-{
-    create_participant(dpf, domainID, participant, logging);
-    register_type_support(fts, participant, type_name, logging);
-    create_topic(participant, topicName, type_name, topic, logging);
-    create_publisher(pub, participant, logging);
-    create_data_writer(pub, topic, writer, logging);
-    flamingo_writer = src::FlamingoDataWriter::_narrow(writer);
 }
 
 void registerSubFlock(SubFlock &flock)
 {
-    registerSub(flock.dpf, flock.participant, flock.domainID, logging, flock.type_name, flock.topicName,
+    registerSub(flock.dpf, flock.participant, flock.domainID, flock.type_name, flock.topicName,
                 flock.topic, flock.sub, flock.reader_i, flock.listener, flock.dr);
 }
 
-void registerSub(DDS::DomainParticipantFactory_var &dpf, DDS::DomainParticipant_var &participant,
-                 int &domainID, bool logging, CORBA::String_var &type_name, std::string &topicName, DDS::Topic_var &topic,
-                 DDS::Subscriber_var &sub, src::FlamingoDataReader_var &reader_i, DDS::DataReaderListener_var &listener,
-                 DDS::DataReader_var &dr)
+void cleanupPubFlock(PubFlock &flock)
 {
-    create_participant(dpf, domainID, participant, logging);
-    register_type_support(fts, participant, type_name, logging);
-    create_topic(participant, topicName, type_name, topic, logging);
-    create_subscriber(sub, participant, logging);
-    DDS::DataReaderQos reader_qos;
-    sub->get_default_datareader_qos(reader_qos);
-    reader_qos.reliability.kind = DDS::RELIABLE_RELIABILITY_QOS;
-    create_data_reader(sub, topic, reader_qos, listener, dr, logging);
-    reader_i = src::FlamingoDataReader::_narrow(dr);
+    cleanup(flock.participant, flock.dpf, logging);
+}
+
+void cleanupSubFlock(SubFlock &flock)
+{
+    cleanup(flock.participant, flock.dpf, logging);
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -261,11 +144,22 @@ int create_topic(DDS::DomainParticipant_var &participant, std::string topicName,
     return 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// END OF GENERIC SECTION
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+/** Section 2: All Publisher specific functions. */
+////////////////////////////////////////////////////////////////////////////
 
-/** Section 2: Only Publisher relevant functions.*/
+void registerPub(DDS::DomainParticipantFactory_var &dpf, DDS::DomainParticipant_var &participant,
+                 int &domainID, CORBA::String_var &type_name,
+                 std::string &topicName, DDS::Topic_var &topic, DDS::Publisher_var &pub, DDS::DataWriter_var &writer,
+                 src::FlamingoDataWriter_var &flamingo_writer)
+{
+    create_participant(dpf, domainID, participant, logging);
+    register_type_support(fts, participant, type_name, logging);
+    create_topic(participant, topicName, type_name, topic, logging);
+    create_publisher(pub, participant, logging);
+    create_data_writer(pub, topic, writer, logging);
+    flamingo_writer = src::FlamingoDataWriter::_narrow(writer);
+}
 
 int create_data_writer(DDS::Publisher_var &pub, DDS::Topic_var &topic, DDS::DataWriter_var &writer, bool logging)
 {
@@ -307,7 +201,7 @@ int create_publisher(DDS::Publisher_var &pub, DDS::DomainParticipant_var &partic
     {
         if (logging)
         {
-            std::cerr << "LOG: create_publisher: publisher successfully created with current participant.";
+            std::cerr << "LOG: create_publisher: publisher successfully created with current participant.\n";
         }
     }
     return 0;
@@ -354,10 +248,6 @@ int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::Fla
 
     ws->detach_condition(condition);
 
-    //For more details about status, conditions, and wait sets, see Ch. 4.
-    // SAMPLE PUBLICATION
-    // Write samples
-
     for (int i = 0; i < num_of_messages; i++)
     {
         DDS::ReturnCode_t error = flamingo_writer->write(flamingo, DDS::HANDLE_NIL);
@@ -381,11 +271,25 @@ int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::Fla
     return 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// END OF PUBLISHER SECTION
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+/** Section 3: All Subscriber specific functions. */
+////////////////////////////////////////////////////////////////////////////
 
-/** Section 3: Only Subscriber relevant functions.*/
+void registerSub(DDS::DomainParticipantFactory_var &dpf, DDS::DomainParticipant_var &participant,
+                 int &domainID, CORBA::String_var &type_name, std::string &topicName, DDS::Topic_var &topic,
+                 DDS::Subscriber_var &sub, src::FlamingoDataReader_var &reader_i, DDS::DataReaderListener_var &listener,
+                 DDS::DataReader_var &dr)
+{
+    create_participant(dpf, domainID, participant, logging);
+    register_type_support(fts, participant, type_name, logging);
+    create_topic(participant, topicName, type_name, topic, logging);
+    create_subscriber(sub, participant, logging);
+    DDS::DataReaderQos reader_qos;
+    sub->get_default_datareader_qos(reader_qos);
+    reader_qos.reliability.kind = DDS::RELIABLE_RELIABILITY_QOS;
+    create_data_reader(sub, topic, reader_qos, listener, dr, logging);
+    reader_i = src::FlamingoDataReader::_narrow(dr);
+}
 
 int create_subscriber(DDS::Subscriber_var &sub, DDS::DomainParticipant_var &participant, bool logging)
 {
@@ -432,7 +336,3 @@ int create_data_reader(DDS::Subscriber_var &sub, DDS::Topic_var &topic, DDS::Dat
     }
     return 0;
 }
-
-/////////////////////////////////////////////////////////////////////////////
-// END OF SUBSCRIBER SECTION
-/////////////////////////////////////////////////////////////////////////////
