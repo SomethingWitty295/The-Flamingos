@@ -38,8 +38,8 @@ int main(int argc, char *argv[])
 
     int domainID = 42; // Default
     std::string topicName = "Default";
-    std::string user_name = "Default";
-    std::string user_subject = "Default";
+    std::string userName = "Default";
+    std::string userSubject = "Default";
 
     std::cout << " " << std::endl;
     std::cout << "------------------------------------\n";
@@ -60,8 +60,8 @@ int main(int argc, char *argv[])
 
     // Setup of our Flamingo message structure
     src::Flamingo flamingo;
-    flamingo.name = user_name.c_str();
-    flamingo.subject = user_subject.c_str();
+    flamingo.name = userName.c_str();
+    flamingo.subject = userSubject.c_str();
     flamingo.data = 0;
     flamingo.daysInCurrentMonth = daysInCurrentMonth();
 
@@ -79,10 +79,10 @@ int main(int argc, char *argv[])
     // Beginning of program execution loop
     while (true)
     {
-        flock.flamingo.subject = user_subject.c_str();
-        flock.flamingo.name = user_name.c_str();
+        flock.flamingo.subject = userSubject.c_str();
+        flock.flamingo.name = userName.c_str();
 
-        printInstructions(domainID, user_name, topicName, user_subject, flock.flamingo.data, logging);
+        printInstructions(domainID, userName, topicName, userSubject, flock.flamingo.data, logging);
 
         char input;
 
@@ -105,8 +105,8 @@ int main(int argc, char *argv[])
             break;
         case 'u':
             std::cout << "Please set username: ";
-            std::cin >> user_name;
-            std::cout << "\nUsername set to " + user_name;
+            std::cin >> userName;
+            std::cout << "\nUsername set to " + userName;
             std::cout << "\n";
             break;
         case 'e':
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
             return 0;
         case 'c':
             std::cout << "Enter the Flamingo Subject:";
-            std::cin >> user_subject;
+            std::cin >> userSubject;
             std::cout << "\nEnter Flamingo generic integer:";
             std::cin >> flock.flamingo.data;
             break;

@@ -13,7 +13,6 @@
 #include <dds/DCPS/transport/rtps_udp/RtpsUdp.h>
 #endif
 
-#include <The-Flamingos/src/FlamingoTypeSupportImpl.h>
 #include <The-Flamingos/src/DataReaderListenerImpl.h>
 #include <The-Flamingos/src/SubFlock.h>
 #include "FlamingoWare.h"

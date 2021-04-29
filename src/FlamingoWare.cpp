@@ -19,7 +19,7 @@
 #include "FlamingoWare.h"
 
 src::FlamingoTypeSupport_var fts = new src::FlamingoTypeSupportImpl();
-
+DDS::DataReaderQos reader_qos;
 bool logging;
 
 void setLogging(bool setting)
@@ -34,37 +34,37 @@ void setLogging(bool setting)
 /** Register a Publisher Flock for publishing samples with given domain ID and topic.*/
 void registerPubFlock(PubFlock &flock)
 {
-    registerPub(flock.dpf, flock._participant, flock.domainID, flock._typeName,
-                flock.topicName, flock._topic, flock._pub, flock._writer, flock._flamingoWriter);
+    _registerPub(flock.dpf, flock._participant, flock.domainID, flock._typeName,
+                 flock.topicName, flock._topic, flock._pub, flock._writer, flock._flamingoWriter);
 }
 /** Register a Subscriber Flock for receiving samples with given domain ID and topic.*/
 void registerSubFlock(SubFlock &flock)
 {
-    registerSub(flock.dpf, flock._participant, flock.domainID, flock._typeName, flock.topicName,
-                flock._topic, flock._sub, flock._freader, flock.listener, flock._dr);
+    _registerSub(flock.dpf, flock._participant, flock.domainID, flock._typeName, flock.topicName,
+                 flock._topic, flock._sub, flock._freader, flock._listener, flock._dr);
 }
 
 /** Cleanup Publisher Flock nested processes, usually used before terminating program.*/
 void cleanupPubFlock(PubFlock &flock)
 {
-    cleanup(flock._participant, flock.dpf, logging);
+    _cleanup(flock._participant, flock.dpf, logging);
 }
 /** Cleanup Subscriber Flock nested processes, usually used before terminating program.*/
 void cleanupSubFlock(SubFlock &flock)
 {
-    cleanup(flock._participant, flock.dpf, logging);
+    _cleanup(flock._participant, flock.dpf, logging);
 }
 
 /** Send Flamingo samples to the appropriate domain and topic given the Flock.*/
 int sendFlock(PubFlock &flock)
 {
-    return send(flock._writer, flock._flamingoWriter, flock.flamingo, logging);
+    return _send(flock._writer, flock._flamingoWriter, flock.flamingo, logging);
 }
 
 ////////////////////////////////////////////////////////////////////////////
 /** Section 1: All generic OpenDDS functions used by BOTH Pub & Sub. */
 ////////////////////////////////////////////////////////////////////////////
-void cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFactory_var &dpf, bool logging)
+void _cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFactory_var &dpf, bool logging)
 {
     participant->delete_contained_entities();
     if (logging)
@@ -85,7 +85,7 @@ void cleanup(DDS::DomainParticipant_var &participant, DDS::DomainParticipantFact
     }
 }
 
-int register_type_support(src::FlamingoTypeSupport_var fts, DDS::DomainParticipant_var &participant, CORBA::String_var &type_name, bool logging)
+int _register_type_support(src::FlamingoTypeSupport_var fts, DDS::DomainParticipant_var &participant, CORBA::String_var &typeName, bool logging)
 {
     // REGISTERING THE DATA TYPE AND CREATING A TOPIC
     // Trying to get my IDE to recognize the type support object type.
@@ -101,12 +101,12 @@ int register_type_support(src::FlamingoTypeSupport_var fts, DDS::DomainParticipa
             std::cerr << "LOG: register_type_support: FlamingoTypeSupport has correctly registered type with given participant.\n";
         }
     }
-    type_name = fts->get_type_name();
+    typeName = fts->get_type_name();
 
     return 0;
 }
 
-int create_participant(DDS::DomainParticipantFactory_var &dpf, int domainID, DDS::DomainParticipant_var &participant, bool logging)
+int _create_participant(DDS::DomainParticipantFactory_var &dpf, int domainID, DDS::DomainParticipant_var &participant, bool logging)
 {
     participant = dpf->create_participant(domainID, //domain ID
                                           PARTICIPANT_QOS_DEFAULT,
@@ -128,10 +128,10 @@ int create_participant(DDS::DomainParticipantFactory_var &dpf, int domainID, DDS
     return 0;
 }
 
-int create_topic(DDS::DomainParticipant_var &participant, std::string topicName, CORBA::String_var type_name, DDS::Topic_var &topic, bool logging)
+int _create_topic(DDS::DomainParticipant_var &participant, std::string topicName, CORBA::String_var typeName, DDS::Topic_var &topic, bool logging)
 {
     topic = participant->create_topic(topicName.c_str(),
-                                      type_name,
+                                      typeName,
                                       TOPIC_QOS_DEFAULT,
                                       0, // No listener required
                                       OpenDDS::DCPS::DEFAULT_STATUS_MASK);
@@ -156,20 +156,20 @@ int create_topic(DDS::DomainParticipant_var &participant, std::string topicName,
 /** Section 2: All Publisher specific functions. */
 ////////////////////////////////////////////////////////////////////////////
 
-void registerPub(DDS::DomainParticipantFactory_var &dpf, DDS::DomainParticipant_var &participant,
-                 int &domainID, CORBA::String_var &type_name,
-                 std::string &topicName, DDS::Topic_var &topic, DDS::Publisher_var &pub, DDS::DataWriter_var &writer,
-                 src::FlamingoDataWriter_var &flamingo_writer)
+void _registerPub(DDS::DomainParticipantFactory_var &dpf, DDS::DomainParticipant_var &participant,
+                  int &domainID, CORBA::String_var &typeName,
+                  std::string &topicName, DDS::Topic_var &topic, DDS::Publisher_var &pub, DDS::DataWriter_var &writer,
+                  src::FlamingoDataWriter_var &flamingo_writer)
 {
-    create_participant(dpf, domainID, participant, logging);
-    register_type_support(fts, participant, type_name, logging);
-    create_topic(participant, topicName, type_name, topic, logging);
-    create_publisher(pub, participant, logging);
-    create_data_writer(pub, topic, writer, logging);
+    _create_participant(dpf, domainID, participant, logging);
+    _register_type_support(fts, participant, typeName, logging);
+    _create_topic(participant, topicName, typeName, topic, logging);
+    _create_publisher(pub, participant, logging);
+    _create_data_writer(pub, topic, writer, logging);
     flamingo_writer = src::FlamingoDataWriter::_narrow(writer);
 }
 
-int create_data_writer(DDS::Publisher_var &pub, DDS::Topic_var &topic, DDS::DataWriter_var &writer, bool logging)
+int _create_data_writer(DDS::Publisher_var &pub, DDS::Topic_var &topic, DDS::DataWriter_var &writer, bool logging)
 {
     //Create the datawriter
     writer = pub->create_datawriter(topic,
@@ -193,7 +193,7 @@ int create_data_writer(DDS::Publisher_var &pub, DDS::Topic_var &topic, DDS::Data
     return 0;
 }
 
-int create_publisher(DDS::Publisher_var &pub, DDS::DomainParticipant_var &participant, bool logging)
+int _create_publisher(DDS::Publisher_var &pub, DDS::DomainParticipant_var &participant, bool logging)
 {
     // Create publisher from participant
     pub = participant->create_publisher(PUBLISHER_QOS_DEFAULT,
@@ -215,7 +215,7 @@ int create_publisher(DDS::Publisher_var &pub, DDS::DomainParticipant_var &partic
     return 0;
 }
 
-int send(DDS::DataWriter_var &writer, src::FlamingoDataWriter_var &flamingo_writer, src::Flamingo flamingo, bool logging)
+int _send(DDS::DataWriter_var &writer, src::FlamingoDataWriter_var &flamingoWriter, src::Flamingo flamingo, bool logging)
 {
     //Block until Subscriber is available
     DDS::StatusCondition_var condition = writer->get_statuscondition();
@@ -256,7 +256,7 @@ int send(DDS::DataWriter_var &writer, src::FlamingoDataWriter_var &flamingo_writ
 
     ws->detach_condition(condition);
 
-    DDS::ReturnCode_t error = flamingo_writer->write(flamingo, DDS::HANDLE_NIL);
+    DDS::ReturnCode_t error = flamingoWriter->write(flamingo, DDS::HANDLE_NIL);
     if (error != DDS::RETCODE_OK)
     {
         // Log or otherwise handle the error condition
@@ -279,23 +279,22 @@ int send(DDS::DataWriter_var &writer, src::FlamingoDataWriter_var &flamingo_writ
 /** Section 3: All Subscriber specific functions. */
 ////////////////////////////////////////////////////////////////////////////
 
-void registerSub(DDS::DomainParticipantFactory_var &dpf, DDS::DomainParticipant_var &participant,
-                 int &domainID, CORBA::String_var &type_name, std::string &topicName, DDS::Topic_var &topic,
-                 DDS::Subscriber_var &sub, src::FlamingoDataReader_var &reader_i, DDS::DataReaderListener_var &listener,
-                 DDS::DataReader_var &dr)
+void _registerSub(DDS::DomainParticipantFactory_var &dpf, DDS::DomainParticipant_var &participant,
+                  int &domainID, CORBA::String_var &type_name, std::string &topicName, DDS::Topic_var &topic,
+                  DDS::Subscriber_var &sub, src::FlamingoDataReader_var &reader, DDS::DataReaderListener_var &listener,
+                  DDS::DataReader_var &dr)
 {
-    create_participant(dpf, domainID, participant, logging);
-    register_type_support(fts, participant, type_name, logging);
-    create_topic(participant, topicName, type_name, topic, logging);
-    create_subscriber(sub, participant, logging);
-    DDS::DataReaderQos reader_qos;
+    _create_participant(dpf, domainID, participant, logging);
+    _register_type_support(fts, participant, type_name, logging);
+    _create_topic(participant, topicName, type_name, topic, logging);
+    _create_subscriber(sub, participant, logging);
     sub->get_default_datareader_qos(reader_qos);
     reader_qos.reliability.kind = DDS::RELIABLE_RELIABILITY_QOS;
-    create_data_reader(sub, topic, reader_qos, listener, dr, logging);
-    reader_i = src::FlamingoDataReader::_narrow(dr);
+    _create_data_reader(sub, topic, reader_qos, listener, dr, logging);
+    reader = src::FlamingoDataReader::_narrow(dr);
 }
 
-int create_subscriber(DDS::Subscriber_var &sub, DDS::DomainParticipant_var &participant, bool logging)
+int _create_subscriber(DDS::Subscriber_var &sub, DDS::DomainParticipant_var &participant, bool logging)
 {
     // Create the subscriber
     sub =
@@ -317,8 +316,8 @@ int create_subscriber(DDS::Subscriber_var &sub, DDS::DomainParticipant_var &part
     return 0;
 }
 
-int create_data_reader(DDS::Subscriber_var &sub, DDS::Topic_var &topic, DDS::DataReaderQos &reader_qos,
-                       DDS::DataReaderListener_var &listener, DDS::DataReader_var &dr, bool logging)
+int _create_data_reader(DDS::Subscriber_var &sub, DDS::Topic_var &topic, DDS::DataReaderQos &reader_qos,
+                        DDS::DataReaderListener_var &listener, DDS::DataReader_var &dr, bool logging)
 {
     //Create the Datareader
     dr = sub->create_datareader(topic,

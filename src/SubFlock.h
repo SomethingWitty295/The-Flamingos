@@ -25,10 +25,8 @@ struct SubFlock
     int domainID;
     //Topic name corresponding to this subscriber
     std::string topicName;
-    //Data Listener that must be set with a DataReaderListenerImpl obj.
-    DDS::DataReaderListener_var listener = new DataReaderListenerImpl;
-    //DDS::DataReaderListener_var listener(new DataReaderListenerImpl);
 
+    DDS::DataReaderListener_var _listener = new DataReaderListenerImpl;
     DDS::DomainParticipant_var _participant;
     DDS::Topic_var _topic;
     CORBA::String_var _typeName;
