@@ -25,7 +25,7 @@ int register_type_support(src::FlamingoTypeSupport_var fts, DDS::DomainParticipa
 int create_participant(DDS::DomainParticipantFactory_var &dpf, int domainID, DDS::DomainParticipant_var &participant, bool logging);
 int create_topic(DDS::DomainParticipant_var &participant, std::string topicName, CORBA::String_var type_name, DDS::Topic_var &topic, bool logging);
 
-int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::FlamingoDataWriter_var &flamingo_writer, src::Flamingo flamingo, bool logging);
+int send(DDS::DataWriter_var &writer, src::FlamingoDataWriter_var &flamingo_writer, src::Flamingo flamingo, bool logging);
 
 // All Publisher specific functions
 

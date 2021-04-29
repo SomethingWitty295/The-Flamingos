@@ -58,7 +58,7 @@ void cleanupSubFlock(SubFlock &flock)
 /** Send Flamingo samples to the appropriate domain and topic given the Flock.*/
 int sendFlock(PubFlock &flock)
 {
-    return send(flock._writer, 10, 1, flock._flamingoWriter, flock.flamingo, logging);
+    return send(flock._writer, flock._flamingoWriter, flock.flamingo, logging);
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -215,7 +215,7 @@ int create_publisher(DDS::Publisher_var &pub, DDS::DomainParticipant_var &partic
     return 0;
 }
 
-int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::FlamingoDataWriter_var &flamingo_writer, src::Flamingo flamingo, bool logging)
+int send(DDS::DataWriter_var &writer, src::FlamingoDataWriter_var &flamingo_writer, src::Flamingo flamingo, bool logging)
 {
     //Block until Subscriber is available
     DDS::StatusCondition_var condition = writer->get_statuscondition();
@@ -242,7 +242,7 @@ int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::Fla
         }
 
         DDS::ConditionSeq conditions;
-        DDS::Duration_t timeout = {seconds, 0};
+        DDS::Duration_t timeout = {10, 0};
         if (ws->wait(conditions, timeout) != DDS::RETCODE_OK)
         {
             std::cerr << "wait failed!" << std::endl;
@@ -256,19 +256,15 @@ int send(DDS::DataWriter_var &writer, int seconds, int num_of_messages, src::Fla
 
     ws->detach_condition(condition);
 
-    for (int i = 0; i < num_of_messages; i++)
+    DDS::ReturnCode_t error = flamingo_writer->write(flamingo, DDS::HANDLE_NIL);
+    if (error != DDS::RETCODE_OK)
     {
-        DDS::ReturnCode_t error = flamingo_writer->write(flamingo, DDS::HANDLE_NIL);
-        flamingo.data++;
-        if (error != DDS::RETCODE_OK)
+        // Log or otherwise handle the error condition
+        if (logging)
         {
-            // Log or otherwise handle the error condition
-            if (logging)
-            {
-                std::cerr << "LOG: send: flamingo has failed to send from pub side. (error != DDS::RETCODE_OK)\n";
-            }
-            return 1;
+            std::cerr << "LOG: send: flamingo has failed to send from pub side. (error != DDS::RETCODE_OK)\n";
         }
+        return 1;
     }
 
     if (logging)
