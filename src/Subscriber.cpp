@@ -1,6 +1,3 @@
-// Author: Tavien Nelson, Cameron Banff
-// Version 1.0.0
-// Description: Subscriber file to communicate with the Publisher
 #include <ace/Log_Msg.h>
 
 #include <dds/DdsDcpsInfrastructureC.h>
@@ -56,25 +53,12 @@ int main(int argc, char *argv[])
 
     // DDS initialization variables & other random variables
     DDS::DomainParticipantFactory_var dpf = TheParticipantFactoryWithArgs(argc, argv);
-    CORBA::String_var type_name;
-    // All our various DDS variables for participant, etc.
-    DDS::DomainParticipant_var participant;
-    DDS::Topic_var topic;
-    DDS::Subscriber_var sub;
-    DDS::DataReaderListener_var listener(new DataReaderListenerImpl);
-    DDS::DataReader_var dr;
 
     // Create our flock object and set its variables to the ones made above.
     SubFlock flock;
-    flock.topic = topic;
-    flock.sub = sub;
-    flock.participant = participant;
-    flock.type_name = type_name;
     flock.domainID = domainID;
-    flock.topicName = topicName;
     flock.dpf = dpf;
-    flock.listener = listener;
-    flock.dr = dr;
+    flock.topicName = topicName;
 
     registerSubFlock(flock);
 
@@ -89,7 +73,6 @@ int main(int argc, char *argv[])
         switch (input)
         {
         case 'e':
-            //cleanup(flock.participant, flock.dpf, logging);
             cleanupSubFlock(flock);
             return 0;
         }

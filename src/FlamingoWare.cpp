@@ -31,26 +31,34 @@ void setLogging(bool setting)
 /** Section 0: Flock Functions */
 ////////////////////////////////////////////////////////////////////////////
 
+/** Register a Publisher Flock for publishing samples with given domain ID and topic.*/
 void registerPubFlock(PubFlock &flock)
 {
-    registerPub(flock.dpf, flock.participant, flock.domainID, flock.type_name,
-                flock.topicName, flock.topic, flock.pub, flock.writer, flock.flamingo_writer);
+    registerPub(flock.dpf, flock._participant, flock.domainID, flock._typeName,
+                flock.topicName, flock._topic, flock._pub, flock._writer, flock._flamingoWriter);
 }
-
+/** Register a Subscriber Flock for receiving samples with given domain ID and topic.*/
 void registerSubFlock(SubFlock &flock)
 {
-    registerSub(flock.dpf, flock.participant, flock.domainID, flock.type_name, flock.topicName,
-                flock.topic, flock.sub, flock.reader_i, flock.listener, flock.dr);
+    registerSub(flock.dpf, flock._participant, flock.domainID, flock._typeName, flock.topicName,
+                flock._topic, flock._sub, flock._freader, flock.listener, flock._dr);
 }
 
+/** Cleanup Publisher Flock nested processes, usually used before terminating program.*/
 void cleanupPubFlock(PubFlock &flock)
 {
-    cleanup(flock.participant, flock.dpf, logging);
+    cleanup(flock._participant, flock.dpf, logging);
 }
-
+/** Cleanup Subscriber Flock nested processes, usually used before terminating program.*/
 void cleanupSubFlock(SubFlock &flock)
 {
-    cleanup(flock.participant, flock.dpf, logging);
+    cleanup(flock._participant, flock.dpf, logging);
+}
+
+/** Send Flamingo samples to the appropriate domain and topic given the Flock.*/
+int sendFlock(PubFlock &flock)
+{
+    return send(flock._writer, 10, 1, flock._flamingoWriter, flock.flamingo, logging);
 }
 
 ////////////////////////////////////////////////////////////////////////////

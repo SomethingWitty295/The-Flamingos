@@ -14,20 +14,28 @@
 #endif
 
 #include <The-Flamingos/src/FlamingoTypeSupportImpl.h>
+#include <The-Flamingos/src/DataReaderListenerImpl.h>
 
 #pragma once
 struct SubFlock
 {
+    //Domain participant factory required for creating DDS relevant connectivity.
     DDS::DomainParticipantFactory_var dpf;
-    DDS::DomainParticipant_var participant;
-    DDS::Topic_var topic;
-    CORBA::String_var type_name;
+    //Domain ID corresponding to this subscriber
     int domainID;
+    //Topic name corresponding to this subscriber
     std::string topicName;
+    //Data Listener that must be set with a DataReaderListenerImpl obj.
+    DDS::DataReaderListener_var listener = new DataReaderListenerImpl;
+    //DDS::DataReaderListener_var listener(new DataReaderListenerImpl);
+
+    DDS::DomainParticipant_var _participant;
+    DDS::Topic_var _topic;
+    CORBA::String_var _typeName;
 
     // Subscriber Specific
-    DDS::Subscriber_var sub;
-    src::FlamingoDataReader_var reader_i;
-    DDS::DataReaderListener_var listener;
-    DDS::DataReader_var dr;
+
+    DDS::Subscriber_var _sub;
+    src::FlamingoDataReader_var _freader;
+    DDS::DataReader_var _dr;
 };

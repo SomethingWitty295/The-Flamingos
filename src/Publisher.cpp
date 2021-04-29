@@ -23,6 +23,7 @@ void printInstructions(int domainID, std::string username, std::string topic, st
 
 int main(int argc, char *argv[])
 {
+    // determine and set logging environment
     bool logging;
     if (getenv("FLAMINGO_DEV"))
     {
@@ -35,12 +36,11 @@ int main(int argc, char *argv[])
     }
     setLogging(logging);
 
-    int domainID = 42;
+    int domainID = 42; // Default
     std::string topicName = "Default";
+    std::string user_name = "Default";
+    std::string user_subject = "Default";
 
-    //////////////////////////////////////////////////////
-    //Welcome Message (& asking user for dID and topicName)
-    //////////////////////////////////////////////////////
     std::cout << " " << std::endl;
     std::cout << "------------------------------------\n";
     std::cout << "|  ___ _            _                |\n";
@@ -55,61 +55,34 @@ int main(int argc, char *argv[])
     std::cout << "\nEnter desired topic name:";
     std::cin >> topicName;
 
-    /*
-    PubFlock flock;
-    flock.domainID = domainID;
-    flock.topicName = topicName;*/
-
-    // DDS initialization variables & other random variables
+    // DPF initialization, required to register our Flocks
     DDS::DomainParticipantFactory_var dpf = TheParticipantFactoryWithArgs(argc, argv);
-    int num_of_messages = 1;
-    std::string user_name = "Default";
-    std::string user_subject = "Default";
-    int attempt;
-    int seconds = 10;
 
-    // Flamingo struct of the user //
+    // Setup of our Flamingo message structure
     src::Flamingo flamingo;
     flamingo.name = user_name.c_str();
     flamingo.subject = user_subject.c_str();
     flamingo.data = 0;
     flamingo.daysInCurrentMonth = daysInCurrentMonth();
 
-    //int register_attempt = register_flock_as_pub(flock);
-
-    // These are never changed, so establish them here.
-    src::FlamingoTypeSupport_var fts = new src::FlamingoTypeSupportImpl();
-    CORBA::String_var type_name;
-
-    // All our various DDS variables for participant, etc.
-
-    DDS::Topic_var topic;
-    DDS::DataWriter_var writer;
-    DDS::Publisher_var pub;
-    DDS::DomainParticipant_var participant;
-    src::FlamingoDataWriter_var flamingo_writer;
-
+    // Create our flock and set appropriate fields.
     PubFlock flock;
-    flock.topic = topic;
-    flock.writer = writer;
-    flock.pub = pub;
-    flock.participant = participant;
-    flock.flamingo_writer = flamingo_writer;
-    flock.type_name = type_name;
+    flock.dpf = dpf;
     flock.domainID = domainID;
     flock.topicName = topicName;
     flock.flamingo = flamingo;
-    flock.dpf = dpf;
 
+    // Register our Flock with the middleware
     registerPubFlock(flock);
 
+    int attempt;
     // Beginning of program execution loop
     while (true)
     {
-        flamingo.subject = user_subject.c_str();
-        flamingo.name = user_name.c_str();
+        flock.flamingo.subject = user_subject.c_str();
+        flock.flamingo.name = user_name.c_str();
 
-        printInstructions(domainID, user_name, topicName, user_subject, flamingo.data, logging);
+        printInstructions(domainID, user_name, topicName, user_subject, flock.flamingo.data, logging);
 
         char input;
 
@@ -119,8 +92,8 @@ int main(int argc, char *argv[])
         {
         case 's':
             std::cout << "\nWaiting...\n";
-            flamingo.dateAndTime = getTime().c_str();
-            attempt = send(flock.writer, seconds, num_of_messages, flock.flamingo_writer, flamingo, logging);
+            flock.flamingo.dateAndTime = getTime().c_str();
+            attempt = sendFlock(flock);
             if (attempt == 0)
             {
                 std::cout << "Message was successfully sent!\n";
@@ -137,14 +110,13 @@ int main(int argc, char *argv[])
             std::cout << "\n";
             break;
         case 'e':
-            //cleanup(flock.participant, flock.dpf, logging);
             cleanupPubFlock(flock);
             return 0;
         case 'c':
             std::cout << "Enter the Flamingo Subject:";
             std::cin >> user_subject;
             std::cout << "\nEnter Flamingo generic integer:";
-            std::cin >> flamingo.data;
+            std::cin >> flock.flamingo.data;
             break;
         }
     }

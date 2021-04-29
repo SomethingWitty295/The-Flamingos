@@ -13,21 +13,26 @@
 #include <dds/DCPS/transport/rtps_udp/RtpsUdp.h>
 #endif
 
-#include <The-Flamingos/src/FlamingoTypeSupportImpl.h>
-
 #pragma once
 struct PubFlock
 {
+
+    //Flamingo struct specific for this publisher
+    src::Flamingo flamingo;
+    //Domain participant factory required for creating DDS relevant connectivity.
     DDS::DomainParticipantFactory_var dpf;
-    DDS::DomainParticipant_var participant;
-    DDS::Topic_var topic;
-    CORBA::String_var type_name;
+    //Domain ID corresponding to this publisher
     int domainID;
+    //Topic name corresponding to this publisher
     std::string topicName;
 
-    // Publisher Specific
-    DDS::Publisher_var pub;
-    DDS::DataWriter_var writer;
-    src::FlamingoDataWriter_var flamingo_writer;
-    src::Flamingo flamingo;
+    DDS::DomainParticipant_var _participant;
+    DDS::Topic_var _topic;
+    CORBA::String_var _typeName;
+
+    // Publisher Specific variables
+
+    DDS::Publisher_var _pub;
+    DDS::DataWriter_var _writer;
+    src::FlamingoDataWriter_var _flamingoWriter;
 };
