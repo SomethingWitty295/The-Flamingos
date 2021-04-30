@@ -1,6 +1,6 @@
 # Flamingo Centered Data-Distribution-Service
 
-***NOTE: This is a rougly translated version of the FCS Manual. If you'd like a more official and organized view of this document, click the link below.***
+***NOTE: This is a rougly translated version of the FCD Manual. If you'd like a more official and organized view of this document, click the link below.***
 
 https://drive.google.com/file/d/15G9rLGYkvGxbv9oNscU7B5Av8_mcZ64b/view?usp=sharing
 
