@@ -28,8 +28,8 @@
 // TAO_IDL - Generated from
 // C:\Users\Corey\Desktop\OpenDDS-3.16\ace_wrappers\tao\TAO_IDL\be\be_codegen.cpp:152
 
-#ifndef _TAO_IDL_FLAMINGOC_LAYV5Z_H_
-#define _TAO_IDL_FLAMINGOC_LAYV5Z_H_
+#ifndef _TAO_IDL_FLAMINGOC_GPGEOZ_H_
+#define _TAO_IDL_FLAMINGOC_GPGEOZ_H_
 
 #include /**/ "ace/pre.h"
 

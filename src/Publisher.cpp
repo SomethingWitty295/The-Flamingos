@@ -50,8 +50,17 @@ int main(int argc, char *argv[])
     std::cout << "|   publisher             |___/      |\n";
     std::cout << "------------------------------------\n";
     std::cout << " " << std::endl;
+
     std::cout << "Enter desired DomainID:";
     std::cin >> domainID;
+    while (std::cin.fail())
+    {
+        std::cout << "Incorrect input. \nPlease enter an appropriate number: ";
+        std::cin.clear();
+        std::cin.ignore(256, '\n');
+        std::cin >> domainID;
+    }
+
     std::cout << "\nEnter desired topic name:";
     std::cin >> topicName;
 
